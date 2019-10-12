@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">YEF</string>
+    <string name="yef_txt">YEF Home</string>
+    <string name="menu_display">Menu Display</string>
+    <string name="admin_login">Admin Login</string>
+    <string name="rate_app">Rate App</string>
+    <string name="share_app">Share App</string>
 </resources>
