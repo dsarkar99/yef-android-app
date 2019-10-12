@@ -41,9 +41,7 @@
                 android:maxWidth="24dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-
                 android:src="@drawable/ic_more_vert_black_24dp" />
-
 
         </LinearLayout>
 
