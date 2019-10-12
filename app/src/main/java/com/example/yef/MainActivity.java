@@ -1,26 +1,26 @@
 package com.example.yef;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
+
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView titlehome = findViewById(R.id.YEF_text);
-    private ImageView menu = findViewById(R.id.menu);
-    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        menu.setOnClickListener(new View.OnClickListener() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getResources().getString(R.string.app_name));
+
+/*        menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu popupMenu = new PopupMenu(context,menu);
@@ -45,10 +45,35 @@ public class MainActivity extends AppCompatActivity {
                 popupMenu.inflate(R.menu.options_menu);
                 popupMenu.show();
             }
-        });
+        });*/
     }
 
-    public void getToHome(View view){
+/*    public void getToHome(View view){
 //        Function to get to home page activity on title text click
+    }*/
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.admin_link:
+                Toast.makeText(getApplicationContext(),"Admin Login",Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.share:
+                Toast.makeText(getApplicationContext(),"Application share Procedure",Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.rate:
+                Toast.makeText(getApplicationContext(),"Rate App",Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
