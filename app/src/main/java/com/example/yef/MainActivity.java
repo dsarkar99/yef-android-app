@@ -1,12 +1,19 @@
 package com.example.yef;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getResources().getString(R.string.app_name));
+
+        Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_downtool);
+        toolbar.setAnimation(anim);
+        whiteNotificationBar(toolbar);
 
 /*        menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
 /*    public void getToHome(View view){
 //        Function to get to home page activity on title text click
     }*/
+
+    private void whiteNotificationBar(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int flags = view.getSystemUiVisibility();
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            view.setSystemUiVisibility(flags);
+            Objects.requireNonNull(this).getWindow().setStatusBarColor(Color.WHITE);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
