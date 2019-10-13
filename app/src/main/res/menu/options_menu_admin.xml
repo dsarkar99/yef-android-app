@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=" com.example.yef.AdminLogin">
+
+<!--    This menu is displayed when admin is signing in
+        It's not having admin login button since it's displayed in admin login page only
+-->
+    <item
+        android:id="@+id/rate"
+        android:title="@string/rate_app"/>
+    <item
+        android:id="@+id/share"
+        android:title="@string/share_app"/>
+</menu>
