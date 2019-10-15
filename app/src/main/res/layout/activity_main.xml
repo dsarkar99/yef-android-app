@@ -3,38 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintlayoutroot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimaryDark">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:id="@+id/linear_toolbar">
-
-            <TextView
-                android:id="@+id/title_text"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="12"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:onClick="getToHome"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="@string/title_text"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
+        android:background="?attr/colorPrimaryDark"
+        tools:ignore="MissingConstraints" />
 
     <LinearLayout
         android:layout_marginTop="60dp"
@@ -48,7 +24,7 @@
 
         </CalendarView>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -13,8 +13,4 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="logo_image">Logo Image</string>
-    <string name="title_text">YEF Events</string>
-    <string name="more">More</string>
-    <string name="logout">Logout</string>
 </resources>

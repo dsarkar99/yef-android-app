@@ -1,28 +1,21 @@
 package com.example.yef;
 
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+
 
 public class MainActivity extends AppCompatActivity {
-
-    Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +29,33 @@ public class MainActivity extends AppCompatActivity {
         Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_downtool);
         toolbar.setAnimation(anim);
         whiteNotificationBar(toolbar);
+
+/*        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context,menu);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        switch (menuItem.getItemId()){
+                            case R.id.admin_link:
+//                                Admin page redirecting
+                                return true;
+                            case R.id.share:
+//                                Application share procedure
+                                return true;
+                            case R.id.rate:
+//                                Link to playstore rating page
+                                return true;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.inflate(R.menu.options_menu);
+                popupMenu.show();
+            }
+        });*/
     }
 
     //    Function to get to home page activity on title text click.
@@ -64,39 +84,15 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case R.id.admin_link:
-                Intent intent = new Intent(this,AdminLogin.class);
+                //intent for opening event details activity
+                Intent intent = new Intent(MainActivity.this, Event_detail.class);
                 startActivity(intent);
-//                Toast.makeText(getApplicationContext(),"Admin Login",Toast.LENGTH_LONG).show();
                 return true;
             case R.id.share:
-                try {
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.setType("text/plain");
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.app_name);
-                    String shareMessage= "\nShare this application with your partners!\n";
-                    shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID +"\n";
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                    startActivity(Intent.createChooser(shareIntent, "Choose one"));
-                } catch(Exception e) {
-                    //e.toString();
-                }
-//                Toast.makeText(getApplicationContext(),"Application share Procedure",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Application share Procedure", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.rate:
-                Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                // To count with Play market backstack, After pressing back button,
-                // to taken back to our application, we need to add following flags to intent.
-                goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
-                        Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
-                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                try {
-                    startActivity(goToMarket);
-                } catch (ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
-                }
-//                Toast.makeText(getApplicationContext(),"Rate App",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Rate App", Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

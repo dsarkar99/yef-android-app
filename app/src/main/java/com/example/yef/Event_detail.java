@@ -1,78 +1,77 @@
 package com.example.yef;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
+
 public class Event_detail extends AppCompatActivity {
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener listener;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_detail);
-        }
 
-    //    Function to get to home page activity on title text click.
-    public void getToHome(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        firebaseAuth = FirebaseAuth.getInstance();
+        listener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // already signed in
+                    Toast.makeText(Event_detail.this, "Welcome admin!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // not signed in
+                    startActivityForResult(
+                            // Get an instance of AuthUI based on the default app
+                            AuthUI.getInstance().createSignInIntentBuilder()
+                                    .setAvailableProviders(Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build()))
+                                    .build(), 1);
+
+
+                }
+            }
+        };
+
+
+    }
+
+    //method to check successful sign in
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                //do nothing
+            } else if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
+        }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.options_menu, menu);
-        return true;
+    protected void onResume() {
+        super.onResume();
+        firebaseAuth.addAuthStateListener(listener);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.admin_link:
-                Intent intent = new Intent(this,AdminLogin.class);
-                startActivity(intent);
-//                Toast.makeText(getApplicationContext(),"Admin Login",Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.share:
-                try {
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.setType("text/plain");
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.app_name);
-                    String shareMessage= "\nShare this application with your partners!\n";
-                    shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID +"\n";
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                    startActivity(Intent.createChooser(shareIntent, "Choose one"));
-                } catch(Exception e) {
-                    //e.toString();
-                }
-//                Toast.makeText(getApplicationContext(),"Application share Procedure",Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.rate:
-                Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                // To count with Play market backstack, After pressing back button,
-                // to taken back to our application, we need to add following flags to intent.
-                goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
-                        Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
-                        Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                try {
-                    startActivity(goToMarket);
-                } catch (ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
-                }
-//                Toast.makeText(getApplicationContext(),"Rate App",Toast.LENGTH_LONG).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    protected void onPause() {
+        super.onPause();
+        firebaseAuth.removeAuthStateListener(listener);
+
     }
 }
