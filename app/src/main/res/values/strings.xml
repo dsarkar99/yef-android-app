@@ -3,6 +3,7 @@
     <string name="yef_txt">YEF Home</string>
     <string name="menu_display">Menu Display</string>
     <string name="admin_login">Admin Login</string>
+    <string name="logout">Log Out</string>
     <string name="rate_app">Rate App</string>
     <string name="share_app">Share App</string>
     <string name="title_activity_admin_login">Log In</string>
