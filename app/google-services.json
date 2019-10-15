@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "74154469135",
+    "firebase_url": "https://yefapp-fdddf.firebaseio.com",
+    "project_id": "yefapp-fdddf",
+    "storage_bucket": "yefapp-fdddf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74154469135:android:b2ecd33a1769e5106e007a",
+        "android_client_info": {
+          "package_name": "com.example.yef"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74154469135-n8ddi3ink3m4cusbjm61aq0d0fvdqukr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA60g3aw-VY0Z5luFKZVJWbKUdh0HXrI8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74154469135-n8ddi3ink3m4cusbjm61aq0d0fvdqukr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
