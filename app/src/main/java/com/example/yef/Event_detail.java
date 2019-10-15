@@ -25,7 +25,7 @@ public class Event_detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_detail);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+/*        firebaseAuth = FirebaseAuth.getInstance();
         listener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -44,12 +44,12 @@ public class Event_detail extends AppCompatActivity {
 
                 }
             }
-        };
+        };*/
 
 
     }
 
-    //method to check successful sign in
+/*    //method to check successful sign in
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
@@ -73,5 +73,13 @@ public class Event_detail extends AppCompatActivity {
         super.onPause();
         firebaseAuth.removeAuthStateListener(listener);
 
+    }*/
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Event_detail.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

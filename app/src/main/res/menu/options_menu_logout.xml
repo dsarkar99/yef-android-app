@@ -7,13 +7,19 @@
         Logout button is displayed
         This menu is used in admin operation pages
 -->
+
     <item
-        android:id="@+id/logout"
-        android:title="@string/logout"/>
+        android:id="@+id/dashboard"
+        android:title="Create Events"/>
+
     <item
         android:id="@+id/rate"
         android:title="@string/rate_app"/>
     <item
         android:id="@+id/share"
         android:title="@string/share_app"/>
+
+    <item
+        android:id="@+id/logout"
+        android:title="Logout"/>
 </menu>

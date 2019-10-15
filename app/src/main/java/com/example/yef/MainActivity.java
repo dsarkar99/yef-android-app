@@ -1,21 +1,42 @@
 package com.example.yef;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    FirebaseUser user;
+
+    FirebaseAuth firebaseAuth;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,32 +51,51 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setAnimation(anim);
         whiteNotificationBar(toolbar);
 
-/*        menu.setOnClickListener(new View.OnClickListener() {
+        fab=(FloatingActionButton) findViewById(R.id.fabadmin);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context,menu);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-
-                        switch (menuItem.getItemId()){
-                            case R.id.admin_link:
-//                                Admin page redirecting
-                                return true;
-                            case R.id.share:
-//                                Application share procedure
-                                return true;
-                            case R.id.rate:
-//                                Link to playstore rating page
-                                return true;
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.inflate(R.menu.options_menu);
-                popupMenu.show();
+            public void onClick(View v) {
+                createvent();
             }
-        });*/
+        });
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        user = firebaseAuth.getCurrentUser();
+
+
+
+
+    }
+
+    //create event
+    void createvent()
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Create Events!");
+        builder.setMessage("Welcome Admin");
+        builder.setIcon(R.mipmap.ic_launcher_round);
+
+        final View viewInflated = LayoutInflater.from(this).inflate(R.layout.createvent, (ViewGroup) findViewById(R.id.f1), false);
+
+
+        EditText eventname=(EditText) viewInflated.findViewById(R.id.eventname);
+
+        builder.setView(viewInflated);
+
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("Submit", null);
+// Set up the buttons
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
     }
 
     //    Function to get to home page activity on title text click.
@@ -72,30 +112,114 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.options_menu, menu);
-        return true;
+        if (user != null) {
+            // already signed in
+            //Toast.makeText(MainActivity.this, "Welcome admin!", Toast.LENGTH_SHORT).show();
+            getMenuInflater().inflate(R.menu.options_menu_logout, menu);
+            fab.setVisibility(View.VISIBLE);
+            return true;
+        }
+        else
+        {
+            getMenuInflater().inflate(R.menu.options_menu, menu);
+            fab.setVisibility(View.GONE);
+            return true;
+        }
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
-            case R.id.admin_link:
-                //intent for opening event details activity
-                Intent intent = new Intent(MainActivity.this, Event_detail.class);
-                startActivity(intent);
-                return true;
-            case R.id.share:
-                Toast.makeText(getApplicationContext(), "Application share Procedure", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.rate:
-                Toast.makeText(getApplicationContext(), "Rate App", Toast.LENGTH_LONG).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (user != null) {
+            switch (id){
+                case R.id.dashboard:
+                    //intent for opening event details activity
+                    createvent();
+                    return true;
+                case R.id.share:
+                    Toast.makeText(getApplicationContext(), "Application share Procedure", Toast.LENGTH_LONG).show();
+                    return true;
+                case R.id.rate:
+                    Toast.makeText(getApplicationContext(), "Rate App", Toast.LENGTH_LONG).show();
+                    return true;
+                case R.id.logout:
+                    Toast.makeText(getApplicationContext(), "Successfully logged out!", Toast.LENGTH_LONG).show();
+                    FirebaseAuth.getInstance().signOut();
+                    Intent i=getIntent();
+                    startActivity(i);
+                    finish();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+        else
+        {
+            switch (id){
+                case R.id.admin_link:
+                    //intent for opening event details activity
+                    //Admin login
+
+                    login();
+                    //Intent intent = new Intent(MainActivity.this, Event_detail.class);
+                    //startActivity(intent);
+                    //finish();
+                    return true;
+                case R.id.share:
+                    Toast.makeText(getApplicationContext(), "Application share Procedure", Toast.LENGTH_LONG).show();
+                    return true;
+                case R.id.rate:
+                    Toast.makeText(getApplicationContext(), "Rate App", Toast.LENGTH_LONG).show();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+
+
+
+    }
+
+    void login()
+    {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // already signed in
+                    Toast.makeText(MainActivity.this, "Already Signed In!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // not signed in
+                    startActivityForResult(
+                            // Get an instance of AuthUI based on the default app
+                            AuthUI.getInstance().createSignInIntentBuilder()
+                                    .setAvailableProviders(Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build()))
+                                    .build(), 1);
+
+
+                }
+
+    }
+
+    //method to check successful sign in
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                //do nothing
+                Intent i=getIntent();
+                startActivity(i);
+                finish();
+                Toast.makeText(MainActivity.this, "Welcome Admin!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                //finish();
+            }
         }
     }
+
+
 }
