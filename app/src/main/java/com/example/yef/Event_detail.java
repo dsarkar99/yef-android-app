@@ -14,11 +14,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 public class Event_detail extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener listener;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
