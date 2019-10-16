@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setAnimation(anim);
         whiteNotificationBar(toolbar);
 
-        fab=findViewById(R.id.fabadmin);
+        fab=(FloatingActionButton) findViewById(R.id.fabadmin);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         user = firebaseAuth.getCurrentUser();
+
+
+
+
     }
 
     //create event
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         final View viewInflated = LayoutInflater.from(this).inflate(R.layout.createvent, (ViewGroup) findViewById(R.id.f1), false);
 
 
-        EditText eventname=viewInflated.findViewById(R.id.eventname);
+        EditText eventname=(EditText) viewInflated.findViewById(R.id.eventname);
 
         builder.setView(viewInflated);
 
