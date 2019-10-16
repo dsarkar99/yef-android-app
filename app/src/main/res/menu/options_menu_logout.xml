@@ -13,6 +13,10 @@
         android:title="Create Events"/>
 
     <item
+        android:id="@+id/maps"
+        android:title="Map Intent Test"/>
+
+    <item
         android:id="@+id/rate"
         android:title="@string/rate_app"/>
     <item

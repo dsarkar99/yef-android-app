@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     FloatingActionButton fab;
+    CalendarView calendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,14 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         user = firebaseAuth.getCurrentUser();
+
+        calendarView=(CalendarView)findViewById(R.id.cview);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                Toast.makeText(getApplicationContext(), ""+dayOfMonth+"/"+month+"/"+year, Toast.LENGTH_LONG).show();
+            }
+        });
 
 
 
@@ -141,6 +152,12 @@ public class MainActivity extends AppCompatActivity {
                     //intent for opening event details activity
                     createvent();
                     return true;
+
+                case R.id.maps:
+                    Toast.makeText(getApplicationContext(), "Testing Map Intent", Toast.LENGTH_SHORT).show();
+                    showdirection();
+                    return true;
+
                 case R.id.share:
                     Toast.makeText(getApplicationContext(), "Application share Procedure", Toast.LENGTH_LONG).show();
                     return true;
@@ -183,6 +200,17 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+    void showdirection()
+    {   String temp="Connought Palace , New Delhi"; //Here , the location from database will be fetched
+        Toast.makeText(this, "Please Wait! Showing Possible directions on the map", Toast.LENGTH_LONG).show();
+        //https://www.google.com/maps/dir/?api=1&origin=Space+Needle+Seattle+WA&destination=Pike+Place+Market+Seattle+WA&travelmode=bicycling
+        //https://www.google.com/maps/dir/?api=1&destination="+l+"&travelmode=walking
+        Uri gmmIntentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+temp+"&travelmode=walking");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     void login()

@@ -37,7 +37,8 @@
 
         <CalendarView
             android:layout_width="match_parent"
-            android:layout_height="305dp">
+            android:layout_height="305dp"
+            android:id="@+id/cview">
 
         </CalendarView>
 
