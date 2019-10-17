@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,14 +29,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.UUID;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     FirebaseUser user;
 
@@ -42,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
 
     private Context context = this;
+
+    String date;
+
+    FirebaseDatabase  database;
+    DatabaseReference ref;
+
+    public static final String DATEPICKER_TAG = "datepicker";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +83,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference();
+
         firebaseAuth = FirebaseAuth.getInstance();
 
         user = firebaseAuth.getCurrentUser();
+
+        Date c = Calendar.getInstance().getTime();
+
+        CalendarView cv=(CalendarView)findViewById(R.id.cview);
+        cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                date=dayOfMonth+"-"+month+"-"+year;
+                Toast.makeText(getApplicationContext(), ""+dayOfMonth+"/"+month+"/"+year, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     //create event
@@ -80,13 +117,44 @@ public class MainActivity extends AppCompatActivity {
         final View viewInflated = LayoutInflater.from(this).inflate(R.layout.createvent, (ViewGroup) findViewById(R.id.f1), false);
 
 
-        EditText eventname = viewInflated.findViewById(R.id.eventname);
+        final EditText eventname = viewInflated.findViewById(R.id.eventname);
+        TextView dateshow =viewInflated.findViewById(R.id.date);
+        dateshow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 //choosedate();
+            }
+        });
 
         builder.setView(viewInflated);
 
         builder.setCancelable(false);
 
-        builder.setPositiveButton("Submit", null);
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String Date=date;
+                String uuid= UUID.randomUUID().toString();
+                String Eventname=eventname.getText().toString();
+                HashMap<String,String> eventMap=new HashMap<>();
+                eventMap.put("Event Name: ",Eventname);
+                ref.child("Events").child("Date: "+Date).child("Event Id: "+ uuid).setValue(eventMap)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful())
+                                {
+
+                                    Toast.makeText(MainActivity.this,"Event Created Successfully",Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    String message=task.getException().toString();
+                                    Toast.makeText(MainActivity.this,"Error: "+message,Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
 // Set up the buttons
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -112,6 +180,16 @@ public class MainActivity extends AppCompatActivity {
             view.setSystemUiVisibility(flags);
         }
     }
+
+/*    void choosedate()
+    {
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setYearRange(1985, 2028);
+        datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+
+    }*/
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -247,4 +325,11 @@ public class MainActivity extends AppCompatActivity {
                     Uri.parse("http://play.google.com/store/apps/details?id=" + context.getPackageName())));
         }
     }
+
+
+/*    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        Toast.makeText(MainActivity.this, "new date:" + year + "-" + month + "-" + day, Toast.LENGTH_LONG).show();
+    }*/
+
 }
