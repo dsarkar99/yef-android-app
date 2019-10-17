@@ -10,8 +10,6 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-
-
         <EditText
             android:id="@+id/eventname"
             android:layout_width="match_parent"
@@ -22,8 +20,6 @@
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
-
-
 
 
         <TextView

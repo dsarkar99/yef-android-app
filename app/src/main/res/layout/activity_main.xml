@@ -4,14 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintlayoutroot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimaryDark"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints">
+
+    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabadmin"
@@ -24,6 +27,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginBottom="10dp"
         android:clickable="true"
+        android:focusable="true"
         android:visibility="visible"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
