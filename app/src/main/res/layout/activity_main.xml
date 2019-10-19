@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimaryDark"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        app:title="@string/app_name">
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -32,11 +33,10 @@
         app:srcCompat="@android:drawable/ic_menu_add" />
 
     <LinearLayout
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="56dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
 
 
         <CalendarView

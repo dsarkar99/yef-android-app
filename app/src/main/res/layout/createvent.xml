@@ -11,16 +11,15 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-        <TextView
+        <EditText
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:hint="Select Event Date"
+            android:hint="@string/select_event_date_text"
             android:inputType="date"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black"
-            />
+            android:textSize="20sp" />
 
 
 
@@ -30,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Name"
+            android:hint="@string/enter_event_name_text"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -41,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Place With Directions"
+            android:hint="@string/enter_event_place_with_directions_text"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -52,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Start Date"
+            android:hint="@string/enter_event_start_date_text"
             android:inputType="date"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -63,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event End Date"
+            android:hint="@string/enter_event_end_date_text"
             android:inputType="date"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -74,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Time"
+            android:hint="@string/enter_event_time_text"
             android:inputType="time"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -85,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Type"
+            android:hint="@string/enter_event_type_text"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -96,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Host Name , Contact"
+            android:hint="@string/enter_event_host_name_contact_text"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -110,7 +109,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:background="#fff"
-            android:text="Please Check the details before submitting!"
+            android:text="@string/please_check_the_details_before_submitting_text"
             android:textAlignment="center"
             android:textColor="#000"
             android:textStyle="bold" />
@@ -124,8 +123,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:visibility="gone"/>
-
-
 
     </RelativeLayout>
 

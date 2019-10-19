@@ -12,6 +12,7 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:clickable="true"
+        android:focusable="true"
         android:elevation="3dp"
         android:foreground="?attr/selectableItemBackground"
         card_view:cardCornerRadius="15dp">
@@ -25,7 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Event Name"
+                android:layout_marginStart="10dp"
+                android:text="@string/event_name_text"
                 android:textStyle="bold"
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -37,11 +39,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/eventname"
                 android:layout_marginLeft="20dp"
-                android:text="Time"
-                android:textSize="15dp"
+                android:layout_marginStart="20dp"
+                android:text="@string/time_text"
+                android:textSize="15sp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#000000" />
-
 
         </RelativeLayout>
 

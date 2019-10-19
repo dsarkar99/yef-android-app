@@ -17,7 +17,7 @@
         android:layout_marginEnd="60dp"
         android:layout_marginBottom="60dp"
         android:padding="8dp"
-        app:srcCompat="@drawable/ic_yef" />
-
+        app:srcCompat="@drawable/ic_yef"
+        android:contentDescription="@string/logo_image"/>
 
 </RelativeLayout>

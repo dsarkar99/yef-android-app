@@ -27,6 +27,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,10 +41,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -69,13 +73,12 @@ public class MainActivity extends AppCompatActivity  {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.app_name);
 
         Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_downtool);
         toolbar.setAnimation(anim);
         whiteNotificationBar(toolbar);
 
-        fab=(FloatingActionButton) findViewById(R.id.fabadmin);
+        fab= findViewById(R.id.fabadmin);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,8 +86,20 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+//        Recyclerview part
+        RecyclerView recyclerView =findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
+        recyclerView.setLayoutManager(layoutManager);
 
+        List<ModelClass> modelClassList=new ArrayList<>();
+        for(int i=0;i<100;i++){
+            modelClassList.add(new ModelClass("A"+i));
+        }
+        Adapter adapter=new Adapter(modelClassList);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
 
         database = FirebaseDatabase.getInstance();
@@ -96,7 +111,7 @@ public class MainActivity extends AppCompatActivity  {
 
         Date c = Calendar.getInstance().getTime();
 
-        CalendarView cv=(CalendarView)findViewById(R.id.cview);
+        CalendarView cv=findViewById(R.id.cview);
         cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -165,12 +180,6 @@ public class MainActivity extends AppCompatActivity  {
 
         builder.show();
 
-    }
-
-    //    Function to get to home page activity on title text click.
-    public void getToHome(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     private void whiteNotificationBar(View view) {

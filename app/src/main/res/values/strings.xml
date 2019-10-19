@@ -14,4 +14,17 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be 5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="logo_image">logo_image</string>
+    <string name="select_event_date_text">Select Event Date</string>
+    <string name="enter_event_name_text">Enter Event Name</string>
+    <string name="enter_event_place_with_directions_text">Enter Event Place With Directions</string>
+    <string name="enter_event_start_date_text">Enter Event Start Date</string>
+    <string name="enter_event_end_date_text">Enter Event End Date</string>
+    <string name="enter_event_time_text">Enter Event Time</string>
+    <string name="enter_event_type_text">Enter Event Type</string>
+    <string name="enter_event_host_name_contact_text">Enter Event Host Name , Contact</string>
+    <string name="please_check_the_details_before_submitting_text">Please Check the details before submitting!</string>
+    <string name="event_name_text">Event Name</string>
+    <string name="time_text">Time</string>
+    <string name="event_details_text">Event Details</string>
 </resources>
