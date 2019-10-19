@@ -1,8 +1,11 @@
 package com.example.yef;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,11 +34,40 @@ public class Event_detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_detail);
 
-        String s=Objects.requireNonNull(getIntent().getExtras()).getString("eventname");
+        String s1=Objects.requireNonNull(getIntent().getExtras()).getString("eventname");
+        final String s2=Objects.requireNonNull(getIntent().getExtras()).getString("venue");
+        String s3=Objects.requireNonNull(getIntent().getExtras()).getString("esdate");
+        String s4=Objects.requireNonNull(getIntent().getExtras()).getString("eedate");
+        String s5=Objects.requireNonNull(getIntent().getExtras()).getString("etime");
+        String s6=Objects.requireNonNull(getIntent().getExtras()).getString("etype");
+        String s7=Objects.requireNonNull(getIntent().getExtras()).getString("edetails");
 
-        TextView edetails=(TextView)findViewById(R.id.edetails);
-        edetails.setText("Event details page for "+s+"\n" +
-                "(UI not yet Designed)");
+
+
+        TextView ename=(TextView)findViewById(R.id.event_name_display);
+        TextView eplace=(TextView)findViewById(R.id.eventplace_display);
+        TextView esdate=(TextView)findViewById(R.id.eventSdate_display);
+        TextView eedate=(TextView)findViewById(R.id.eventEdate_display);
+        TextView etime=(TextView)findViewById(R.id.eventTime_display);
+        TextView etype=(TextView)findViewById(R.id.eventType_display);
+        TextView edetails=(TextView)findViewById(R.id.eventHost_display);
+
+        Button btn_direction=(Button)findViewById(R.id.btn_direction);
+        btn_direction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                open_direction(s2);
+            }
+        });
+
+
+        ename.setText(s1);
+        eplace.setText(s2);
+        esdate.setText(s3);
+        eedate.setText(s4);
+        etime.setText(s5);
+        etype.setText(s6);
+        edetails.setText(s7);
 
 /*        firebaseAuth = FirebaseAuth.getInstance();
         listener = new FirebaseAuth.AuthStateListener() {
@@ -86,6 +118,23 @@ public class Event_detail extends AppCompatActivity {
         firebaseAuth.removeAuthStateListener(listener);
 
     }*/
+
+    void open_direction(String l)
+    {
+        Toast.makeText(this, "Please Wait! Showing Possible directions on the map", Toast.LENGTH_LONG).show();
+        try {
+            String[] str_array = l.split(",");
+            String latitute = str_array[0];
+            String longitude = str_array[1];
+        } catch (NullPointerException e) {
+            System.out.println(e.toString());
+        }
+
+        Uri gmmIntentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+l+"&travelmode=driving");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+    }
 
     @Override
     public void onBackPressed() {

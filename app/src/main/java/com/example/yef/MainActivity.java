@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -87,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
     private List<modelclass> contactList;
     private eventadapter mAdapter;
 
+    TextView esdate,eedate,eventTime;
+    EditText eventname,eventplace,eventtype,eventdetails;
+
+    String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,13 +149,15 @@ public class MainActivity extends AppCompatActivity {
 
         Date c = Calendar.getInstance().getTime();
 
+        //final String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
         CalendarView cv=(CalendarView)findViewById(R.id.cview);
         cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 int monthtemp=month+1;
                 date=dayOfMonth+"-"+monthtemp+"-"+year;
-                //Toast.makeText(getApplicationContext(), dayOfMonth+"-"+month+"-"+year, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), date, Toast.LENGTH_LONG).show();
                 get_data();
                 //Toast.makeText(getApplicationContext(), ""+dayOfMonth+"-"+month+"-"+year, Toast.LENGTH_LONG).show();
             }
@@ -166,12 +175,47 @@ public class MainActivity extends AppCompatActivity {
         final View viewInflated = LayoutInflater.from(this).inflate(R.layout.createvent, (ViewGroup) findViewById(R.id.f1), false);
 
 
-        final EditText eventname = viewInflated.findViewById(R.id.eventname);
-        dateshow =viewInflated.findViewById(R.id.date);
-        dateshow.setOnClickListener(new View.OnClickListener() {
+        eventname = viewInflated.findViewById(R.id.eventname);
+        eventplace=viewInflated.findViewById(R.id.eventplace);
+
+        esdate=viewInflated.findViewById(R.id.esdate);
+        eedate=viewInflated.findViewById(R.id.eedate);
+        eventTime=viewInflated.findViewById(R.id.eventTime);
+        eventtype=viewInflated.findViewById(R.id.eventType);
+        eventdetails=viewInflated.findViewById(R.id.eventdetails);
+
+
+        eventTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 setDate(viewInflated);
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        eventTime.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, false);//Yes 24 hour time
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+            }
+        });
+
+
+
+        esdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 setsDate(viewInflated);
+            }
+        });
+
+        eedate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seteDate(viewInflated);
             }
         });
 
@@ -379,9 +423,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     @SuppressWarnings("deprecation")
-    public void setDate(View view) {
+    public void setsDate(View view) {
         showDialog(999);
-        Toast.makeText(getApplicationContext(), "Please Choose a Date",
+        Toast.makeText(getApplicationContext(), "Please Choose a Event start date",
+                Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    public void seteDate(View view) {
+        showDialog(1000);
+        Toast.makeText(getApplicationContext(), "Please Choose a Event end date",
                 Toast.LENGTH_SHORT)
                 .show();
     }
@@ -393,8 +444,26 @@ public class MainActivity extends AppCompatActivity {
             return new DatePickerDialog(this,
                     myDateListener, year, month, day);
         }
+
+        if (id == 1000) {
+            return new DatePickerDialog(this,
+                    myDateListener2, year, month, day);
+        }
         return null;
     }
+
+    DatePickerDialog.OnDateSetListener myDateListener2 = new
+            DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker arg0,
+                                      int arg1, int arg2, int arg3) {
+                    // TODO Auto-generated method stub
+/*                    arg1 = year;
+                    arg2 = month;
+                    arg3 = day;*/
+                    showDate2(arg1, arg2+1, arg3);
+                }
+            };
 
     DatePickerDialog.OnDateSetListener myDateListener = new
             DatePickerDialog.OnDateSetListener() {
@@ -410,8 +479,13 @@ public class MainActivity extends AppCompatActivity {
             };
 
     void showDate(int year, int month, int day) {
-        dateshow.setText(new StringBuilder().append(day).append("-")
-                .append(month).append("-").append(year));
+        esdate.setText(new StringBuilder().append(day).append("-")
+                .append(monthNames[month-1]).append("-").append(year));
+    }
+
+    void showDate2(int year, int month, int day) {
+        eedate.setText(new StringBuilder().append(day).append("-")
+                .append(monthNames[month-1]).append("-").append(year));
     }
 
 

@@ -2,8 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/f1"
-    android:background="@drawable/ic_yef">
+    android:id="@+id/f1">
 
 
     <RelativeLayout
@@ -11,25 +10,9 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/fui_buttonShadow"
-            android:gravity="center"
-            android:hint="Select Event Date"
-            android:inputType="date"
-            android:padding="13dp"
-            android:textColor="@android:color/black"
-            android:textColorHint="@android:color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-
 
         <EditText
             android:id="@+id/eventname"
-            android:layout_below="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -44,43 +27,61 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Place With Directions"
+            android:hint="Enter Event Place"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
 
-        <EditText
-            android:id="@+id/eventSdate"
+
+        <TextView
+            android:id="@+id/esdate"
             android:layout_below="@+id/eventplace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Start Date"
+            android:background="@color/fui_buttonShadow"
+            android:gravity="center"
+            android:hint="Select Event Start Date"
             android:inputType="date"
+            android:padding="9dp"
             android:textColor="@android:color/black"
-            android:textColorHint="@android:color/black" />
+            android:textColorHint="@android:color/black"
+            android:textSize="17dp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/eventEdate"
-            android:layout_below="@+id/eventSdate"
+
+
+        <TextView
+            android:id="@+id/eedate"
+            android:layout_below="@+id/esdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event End Date"
+            android:background="@color/fui_buttonShadow"
+            android:gravity="center"
+            android:hint="Select Event End Date"
             android:inputType="date"
+            android:padding="9dp"
             android:textColor="@android:color/black"
-            android:textColorHint="@android:color/black" />
+            android:textColorHint="@android:color/black"
+            android:textSize="17dp"
+            android:textStyle="bold" />
 
-        <EditText
+        <TextView
             android:id="@+id/eventTime"
-            android:layout_below="@+id/eventEdate"
+            android:layout_below="@+id/eedate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Time"
-            android:inputType="time"
+            android:background="@color/fui_buttonShadow"
+            android:gravity="center"
+            android:hint="Select Event Time"
+            android:inputType="date"
+            android:padding="9dp"
             android:textColor="@android:color/black"
-            android:textColorHint="@android:color/black" />
+            android:textColorHint="@android:color/black"
+            android:textSize="17dp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/eventType"
@@ -94,12 +95,12 @@
             android:textColorHint="@android:color/black" />
 
         <EditText
-            android:id="@+id/eventHost"
+            android:id="@+id/eventdetails"
             android:layout_below="@+id/eventType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Host Name , Contact"
+            android:hint="Enter Event Details"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -109,7 +110,7 @@
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/eventHost"
+            android:layout_below="@+id/eventdetails"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:background="#fff"
