@@ -2,11 +2,15 @@ package com.example.yef;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,17 +23,23 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.yef.Model.modelclass;
+import com.example.yef.adapter.eventadapter;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,6 +48,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 import java.text.SimpleDateFormat;
@@ -47,10 +59,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
-public class MainActivity extends AppCompatActivity  {
+
+public class MainActivity extends AppCompatActivity {
 
     FirebaseUser user;
 
@@ -64,7 +78,14 @@ public class MainActivity extends AppCompatActivity  {
     FirebaseDatabase  database;
     DatabaseReference ref;
 
-    public static final String DATEPICKER_TAG = "datepicker";
+    DatePicker datePicker;
+    Calendar calendar;
+    TextView dateshow;
+    int year, month, day;
+
+    private RecyclerView recyclerView;
+    private List<modelclass> contactList;
+    private eventadapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +94,19 @@ public class MainActivity extends AppCompatActivity  {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.app_name);
 
         Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_downtool);
         toolbar.setAnimation(anim);
         whiteNotificationBar(toolbar);
 
-        fab= findViewById(R.id.fabadmin);
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+
+
+        fab=(FloatingActionButton) findViewById(R.id.fabadmin);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,20 +114,23 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
-//        Recyclerview part
-        RecyclerView recyclerView =findViewById(R.id.recyclerView);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        recyclerView.setLayoutManager(layoutManager);
 
-        List<ModelClass> modelClassList=new ArrayList<>();
-        for(int i=0;i<100;i++){
-            modelClassList.add(new ModelClass("A"+i));
-        }
-        Adapter adapter=new Adapter(modelClassList);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        recyclerView = findViewById(R.id.recyclerView);
+        contactList = new ArrayList<>();
+        mAdapter = new eventadapter(MainActivity.this, contactList);
+
+        // white background notification bar
+        whiteNotificationBar(recyclerView);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new MyDividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL, 36));
+        recyclerView.setAdapter(mAdapter);
+
+
+
 
 
         database = FirebaseDatabase.getInstance();
@@ -111,12 +142,15 @@ public class MainActivity extends AppCompatActivity  {
 
         Date c = Calendar.getInstance().getTime();
 
-        CalendarView cv=findViewById(R.id.cview);
+        CalendarView cv=(CalendarView)findViewById(R.id.cview);
         cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                date=dayOfMonth+"-"+month+"-"+year;
-                Toast.makeText(getApplicationContext(), ""+dayOfMonth+"/"+month+"/"+year, Toast.LENGTH_LONG).show();
+                int monthtemp=month+1;
+                date=dayOfMonth+"-"+monthtemp+"-"+year;
+                //Toast.makeText(getApplicationContext(), dayOfMonth+"-"+month+"-"+year, Toast.LENGTH_LONG).show();
+                get_data();
+                //Toast.makeText(getApplicationContext(), ""+dayOfMonth+"-"+month+"-"+year, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -125,21 +159,23 @@ public class MainActivity extends AppCompatActivity  {
     void createvent()
     {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Create Events!");
+/*        builder.setTitle("Create Events!");
         builder.setMessage("Welcome Admin");
-        builder.setIcon(R.mipmap.ic_launcher_round);
+        builder.setIcon(R.mipmap.ic_launcher_round);*/
 
         final View viewInflated = LayoutInflater.from(this).inflate(R.layout.createvent, (ViewGroup) findViewById(R.id.f1), false);
 
 
         final EditText eventname = viewInflated.findViewById(R.id.eventname);
-        TextView dateshow =viewInflated.findViewById(R.id.date);
+        dateshow =viewInflated.findViewById(R.id.date);
         dateshow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 //choosedate();
+                 setDate(viewInflated);
             }
         });
+
+        //showDate(year, month+1, day);
 
         builder.setView(viewInflated);
 
@@ -148,7 +184,7 @@ public class MainActivity extends AppCompatActivity  {
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String Date=date;
+                String Date=dateshow.getText().toString();
                 String uuid= UUID.randomUUID().toString();
                 String Eventname=eventname.getText().toString();
                 HashMap<String,String> eventMap=new HashMap<>();
@@ -182,6 +218,12 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
+    //    Function to get to home page activity on title text click.
+    public void getToHome(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     private void whiteNotificationBar(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int flags = view.getSystemUiVisibility();
@@ -207,7 +249,7 @@ public class MainActivity extends AppCompatActivity  {
         if (user != null) {
             // already signed in
             //Toast.makeText(MainActivity.this, "Welcome admin!", Toast.LENGTH_SHORT).show();
-            getMenuInflater().inflate(R.menu.options_menu_logout, menu);
+            getMenuInflater().inflate(R.menu.options_menu_admin, menu);
             fab.setVisibility(View.VISIBLE);
             return true;
         }
@@ -336,9 +378,116 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-/*    @Override
-    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-        Toast.makeText(MainActivity.this, "new date:" + year + "-" + month + "-" + day, Toast.LENGTH_LONG).show();
-    }*/
+    @SuppressWarnings("deprecation")
+    public void setDate(View view) {
+        showDialog(999);
+        Toast.makeText(getApplicationContext(), "Please Choose a Date",
+                Toast.LENGTH_SHORT)
+                .show();
+    }
 
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        // TODO Auto-generated method stub
+        if (id == 999) {
+            return new DatePickerDialog(this,
+                    myDateListener, year, month, day);
+        }
+        return null;
+    }
+
+    DatePickerDialog.OnDateSetListener myDateListener = new
+            DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker arg0,
+                                      int arg1, int arg2, int arg3) {
+                    // TODO Auto-generated method stub
+/*                    arg1 = year;
+                    arg2 = month;
+                    arg3 = day;*/
+                    showDate(arg1, arg2+1, arg3);
+                }
+            };
+
+    void showDate(int year, int month, int day) {
+        dateshow.setText(new StringBuilder().append(day).append("-")
+                .append(month).append("-").append(year));
+    }
+
+
+    void get_data()
+    {
+        final Bitmap[] bitmap = new Bitmap[1];
+        @SuppressLint("StaticFieldLeak")
+        class UploadImage extends AsyncTask<Bitmap,Void,String> {
+            HttpHandler rh = new HttpHandler();
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+               // Toast.makeText(MainActivity.this, s,Toast.LENGTH_LONG).show();
+                try
+                {
+                    if(Objects.equals(s.trim(), "error"))
+                    {
+                        Toast.makeText(MainActivity.this,"Request Timed out!\n" + "Refresh Now..",Toast.LENGTH_LONG).show();
+                        contactList.clear();
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    else if(Objects.equals(s.trim(), "")) {
+                        Toast.makeText(MainActivity.this, "Unable to fetch data!", Toast.LENGTH_LONG).show();
+                        contactList.clear();
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    else if(Objects.equals(s.trim(), "[]")) {
+                        contactList.clear();
+                        mAdapter.notifyDataSetChanged();
+                        Toast.makeText(MainActivity.this, "Sorry, No events on "+date+"!", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        List<modelclass> items = new Gson().fromJson(s, new TypeToken<List<modelclass>>() {
+                        }.getType());
+
+                        // adding contacts to contacts list
+                        contactList.clear();
+                        contactList.addAll(items);
+
+                        // refreshing recycler view
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Toast.makeText(MainActivity.this, e.toString(),Toast.LENGTH_LONG).show();
+                }
+
+                //Toast.makeText(SellingPortal.this, s,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            protected String doInBackground(Bitmap... params) {
+                bitmap[0] = params[0];
+
+                HashMap<String,String> data = new HashMap<>();
+                data.put("eventdate",date.trim());
+                String result = rh.sendPostRequest(getString(R.string.url)+"get_events.php",data);
+
+                return result;
+            }
+        }
+
+        UploadImage ui = new UploadImage();
+        ui.execute(bitmap[0]);
+    }
 }

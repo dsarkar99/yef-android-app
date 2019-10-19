@@ -3,27 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=" com.example.yef.AdminLogin">
 
-<!--    This menu is displayed once admin is logged in
-        Logout button is displayed
-        This menu is used in admin operation pages
+<!--    This menu is displayed when admin is signing in
+        It's not having admin login button since it's displayed in admin login page only
 -->
-
-    <item
-        android:id="@+id/dashboard"
-        android:title="Create Events"/>
-
-    <item
-        android:id="@+id/maps"
-        android:title="Map Intent Test"/>
-
     <item
         android:id="@+id/rate"
         android:title="@string/rate_app"/>
     <item
         android:id="@+id/share"
         android:title="@string/share_app"/>
-
-    <item
-        android:id="@+id/logout"
-        android:title="Logout"/>
 </menu>

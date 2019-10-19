@@ -1,8 +1,14 @@
 package com.example.yef;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
@@ -10,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -18,10 +25,17 @@ public class Event_detail extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener listener;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_detail);
+
+        String s=Objects.requireNonNull(getIntent().getExtras()).getString("eventname");
+
+        TextView edetails=(TextView)findViewById(R.id.edetails);
+        edetails.setText("Event details page for "+s+"\n" +
+                "(UI not yet Designed)");
 
 /*        firebaseAuth = FirebaseAuth.getInstance();
         listener = new FirebaseAuth.AuthStateListener() {
