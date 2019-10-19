@@ -27,4 +27,18 @@
     <string name="event_name_text">Event Name</string>
     <string name="time_text">Time</string>
     <string name="event_details_text">Event Details</string>
+    <string name="event_name">Event Name</string>
+    <string name="venue">Venue</string>
+    <string name="place_and_address_of_the_event">Place and address of the event</string>
+    <string name="starts_from">Starts from:</string>
+    <string name="event_starting_date">Event Starting date</string>
+    <string name="ends_on">Ends On:</string>
+    <string name="event_ending_date">Event Ending date</string>
+    <string name="time">Time:</string>
+    <string name="event_time">Event Time</string>
+    <string name="event_type">Event Type:</string>
+    <string name="event_type_text">Event type</string>
+    <string name="event_host_details">Event Host Details</string>
+    <string name="event_hosting_details">Event hosting details</string>
+    <string name="get_me_directions">Get Me Directions</string>
 </resources>
