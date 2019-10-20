@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 
 public class splash extends AppCompatActivity {
-    private static int SPLASH_TIMEOUT = 4000;
+    private static int SPLASH_TIMEOUT = 2000;
 
 
     @Override

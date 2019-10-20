@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Name"
+            android:hint="Event Name"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Place"
+            android:hint="Event Place"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Type"
+            android:hint="Event Type"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Enter Event Details"
+            android:hint="Event Details"
             android:inputType="textPersonName"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
