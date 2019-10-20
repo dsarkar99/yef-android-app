@@ -21,11 +21,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -40,6 +43,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.yef.Model.modelclass;
 import com.example.yef.adapter.eventadapter;
 import com.firebase.ui.auth.AuthUI;
@@ -54,11 +58,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -92,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
     TextView esdate,eedate,eventTime;
     EditText eventname,eventplace,eventtype,eventdetails;
 
+    public GregorianCalendar cal_month, cal_month_copy;
+    private HwAdapter hwAdapter;
+    private TextView tv_month;
+
     String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
     @Override
@@ -107,6 +119,11 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setAnimation(anim);
         whiteNotificationBar(toolbar);
 
+        HomeCollection.date_collection_arr= new ArrayList<>();
+
+        get_events();
+
+
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
@@ -117,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //startActivity(new Intent(MainActivity.this,temporary.class));
                 createvent();
             }
         });
@@ -151,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
         //final String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
-        CalendarView cv=(CalendarView)findViewById(R.id.cview);
+/*        CalendarView cv=(CalendarView)findViewById(R.id.cview);
         cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -161,6 +179,61 @@ public class MainActivity extends AppCompatActivity {
                 get_data();
                 //Toast.makeText(getApplicationContext(), ""+dayOfMonth+"-"+month+"-"+year, Toast.LENGTH_LONG).show();
             }
+        });*/
+
+
+
+
+
+        cal_month = (GregorianCalendar) GregorianCalendar.getInstance();
+        cal_month_copy = (GregorianCalendar) cal_month.clone();
+        hwAdapter = new HwAdapter(this, cal_month,HomeCollection.date_collection_arr);
+
+        tv_month = (TextView) findViewById(R.id.tv_month);
+        tv_month.setText(android.text.format.DateFormat.format("MMMM yyyy", cal_month));
+
+
+        ImageButton previous = (ImageButton) findViewById(R.id.ib_prev);
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cal_month.get(GregorianCalendar.MONTH) == 4&&cal_month.get(GregorianCalendar.YEAR)==2017) {
+                    //cal_month.set((cal_month.get(GregorianCalendar.YEAR) - 1), cal_month.getActualMaximum(GregorianCalendar.MONTH), 1);
+                    Toast.makeText(MainActivity.this, "Event Detail is available for current session only.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    setPreviousMonth();
+                    refreshCalendar();
+                }
+
+
+            }
+        });
+        ImageButton next = (ImageButton) findViewById(R.id.Ib_next);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cal_month.get(GregorianCalendar.MONTH) == 5&&cal_month.get(GregorianCalendar.YEAR)==2018) {
+                    //cal_month.set((cal_month.get(GregorianCalendar.YEAR) + 1), cal_month.getActualMinimum(GregorianCalendar.MONTH), 1);
+                    Toast.makeText(MainActivity.this, "Event Detail is available for current session only.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    setNextMonth();
+                    refreshCalendar();
+                }
+            }
+        });
+        GridView gridview = (GridView) findViewById(R.id.gv_calendar);
+        gridview.setAdapter(hwAdapter);
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                String selectedGridDate = HwAdapter.day_string.get(position);
+                get_edetails(selectedGridDate);
+                Toast.makeText(MainActivity.this, selectedGridDate, Toast.LENGTH_SHORT).show();
+               // ((HwAdapter) parent.getAdapter()).getPositionList(selectedGridDate, MainActivity.this);
+            }
+
         });
     }
 
@@ -259,6 +332,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         builder.show();
+
+
+
+
+
+
+
+
 
     }
 
@@ -488,8 +569,38 @@ public class MainActivity extends AppCompatActivity {
                 .append(monthNames[month-1]).append("-").append(year));
     }
 
+    void get_events()
+    {
+        JsonArrayRequest request = new JsonArrayRequest(getString(R.string.url)+"get_events.php",
+                response -> {
+                    //Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                    if (response == null) {
+                        Toast.makeText(getApplicationContext(), "Couldn't fetch the contacts! Pleas try again.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    for (int i = 0; i < response.length(); i++) {
 
-    void get_data()
+                        try {
+                            JSONObject jsonObject = response.getJSONObject(i);
+                            //imageView.setImageResource(sampleImages[position]);
+                            //Toast.makeText(MainActivity.this, jsonObject.getString("image_url"), Toast.LENGTH_LONG).show();
+                            //date_collection_arr.add(new HomeCollection("ABC EVENT","2019-09-20","2019-09-20","15:33","XYZ","OUTSTANDING","Kolkata"));
+                            HomeCollection.date_collection_arr.add( new HomeCollection(jsonObject.getString("eventname"),jsonObject.getString("start_date"),jsonObject.getString("end_date"),jsonObject.getString("time"),jsonObject.getString("event_type"),jsonObject.getString("event_details"),jsonObject.getString("venue")));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        //PD.dismiss();
+                    }
+                }, error -> {
+            //Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+
+        MyApplication.getInstance().addToRequestQueue(request);
+    }
+
+
+    void get_edetails(String dateresponse)
     {
         final Bitmap[] bitmap = new Bitmap[1];
         @SuppressLint("StaticFieldLeak")
@@ -532,6 +643,7 @@ public class MainActivity extends AppCompatActivity {
                         List<modelclass> items = new Gson().fromJson(s, new TypeToken<List<modelclass>>() {
                         }.getType());
 
+
                         // adding contacts to contacts list
                         contactList.clear();
                         contactList.addAll(items);
@@ -554,8 +666,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmap[0] = params[0];
 
                 HashMap<String,String> data = new HashMap<>();
-                data.put("eventdate",date.trim());
-                String result = rh.sendPostRequest(getString(R.string.url)+"get_events.php",data);
+                data.put("eventdate",dateresponse.trim());
+                String result = rh.sendPostRequest(getString(R.string.url)+"get_edetails.php",data);
 
                 return result;
             }
@@ -563,5 +675,28 @@ public class MainActivity extends AppCompatActivity {
 
         UploadImage ui = new UploadImage();
         ui.execute(bitmap[0]);
+    }
+
+    protected void setNextMonth() {
+        if (cal_month.get(GregorianCalendar.MONTH) == cal_month.getActualMaximum(GregorianCalendar.MONTH)) {
+            cal_month.set((cal_month.get(GregorianCalendar.YEAR) + 1), cal_month.getActualMinimum(GregorianCalendar.MONTH), 1);
+        } else {
+            cal_month.set(GregorianCalendar.MONTH,
+                    cal_month.get(GregorianCalendar.MONTH) + 1);
+        }
+    }
+
+    protected void setPreviousMonth() {
+        if (cal_month.get(GregorianCalendar.MONTH) == cal_month.getActualMinimum(GregorianCalendar.MONTH)) {
+            cal_month.set((cal_month.get(GregorianCalendar.YEAR) - 1), cal_month.getActualMaximum(GregorianCalendar.MONTH), 1);
+        } else {
+            cal_month.set(GregorianCalendar.MONTH, cal_month.get(GregorianCalendar.MONTH) - 1);
+        }
+    }
+
+    public void refreshCalendar() {
+        hwAdapter.refreshDays();
+        hwAdapter.notifyDataSetChanged();
+        tv_month.setText(android.text.format.DateFormat.format("MMMM yyyy", cal_month));
     }
 }

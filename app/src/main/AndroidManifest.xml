@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="com.example.yef.MyApplication"
         android:allowBackup="true"
         android:appComponentFactory="whateverString"
         android:icon="@drawable/ic_yef"

@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.example.yef"
         minSdkVersion 16
@@ -54,6 +58,8 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.0'
 
+    implementation 'com.applandeo:material-calendar-view:1.5.0'
+    implementation 'com.android.volley:volley:1.1.0'
 
 
 }

@@ -68,11 +68,15 @@ public class eventadapter extends RecyclerView.Adapter<eventadapter.MyViewHolder
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
-                                      Intent modify_intent = new Intent(context,
-                                Event_detail.class);
-
-                        modify_intent.putExtra("eventname", pdf.getname());
-                Toast.makeText(context, pdf.getname(), Toast.LENGTH_SHORT).show();
+                                      Intent modify_intent = new Intent(context, Event_detail.class);
+                                      modify_intent.putExtra("eventname", pdf.getname());
+                modify_intent.putExtra("venue", pdf.getVenue());
+                modify_intent.putExtra("esdate", pdf.getStart_date());
+                modify_intent.putExtra("eedate", pdf.getEnd_date());
+                modify_intent.putExtra("etime", pdf.getTime());
+                modify_intent.putExtra("etype", pdf.getEvent_type());
+                modify_intent.putExtra("edetails", pdf.getEvent_details());
+                //Toast.makeText(context, pdf.getname(), Toast.LENGTH_SHORT).show();
                 context.startActivity(modify_intent);
             }
         });
@@ -88,22 +92,7 @@ public class eventadapter extends RecyclerView.Adapter<eventadapter.MyViewHolder
     }
 
 
-    void open_direction(String l)
-    {
-        Toast.makeText(context, "Please Wait! Showing Possible directions on the map", Toast.LENGTH_LONG).show();
-        try {
-            String[] str_array = l.split(",");
-            String latitute = str_array[0];
-            String longitude = str_array[1];
-        } catch (NullPointerException e) {
-            System.out.println(e.toString());
-        }
 
-        Uri gmmIntentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination="+l+"&travelmode=walking");
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        context.startActivity(mapIntent);
-    }
 
 
 }
