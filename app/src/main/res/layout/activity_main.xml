@@ -5,16 +5,43 @@
     android:id="@+id/constraintlayoutroot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D1C4E9"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimaryDark"
+        android:background="@drawable/toolbarbg"
         tools:ignore="MissingConstraints">
 
     </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/internet">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:srcCompat="@drawable/ic_cloud"
+            android:id="@+id/image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You're offline"
+            android:textStyle="bold"
+            android:textSize="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/image"/>
+
+    </RelativeLayout>
+
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabadmin"
@@ -24,28 +51,47 @@
         android:layout_alignRight="@+id/toolbar"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="10dp"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="56dp"
         android:visibility="visible"
         app:backgroundTint="@color/common_google_signin_btn_text_light_default"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
+    <ProgressBar
+        android:id="@+id/my_progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="13dp"
+        android:layout_marginTop="-5dp"
+        android:background="@color/colorPrimary"
+        android:indeterminate="true"
+        android:visibility="visible" />
+
+<!--    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:indeterminateDrawable="@anim/custom_progress_dialog"/>-->
+
     <LinearLayout
+        android:id="@+id/calendarContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="56dp"
-        android:padding="20dp"
-        android:background="@color/common_google_signin_btn_text_dark_disabled"
-        android:orientation="vertical">
+        android:padding="30dp"
+        android:layoutAnimation="@anim/layout_animation_up_to_down"
+        android:background="#D1C4E9"
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical"
+        android:visibility="invisible">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/calendarbg"
             android:layout_margin="4dp"
-            android:background="#343434"
             android:id="@+id/ll_calendar"
             android:orientation="vertical" >
 
@@ -53,7 +99,6 @@
                 android:id="@+id/header"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#ffffff"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="10dp" >
@@ -197,7 +242,7 @@
                 android:id="@+id/gv_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ffffff"
+                android:background="@drawable/calendarbg"
                 android:cacheColorHint="#ffffff"
                 android:gravity="center"
                 android:listSelector="@android:color/transparent"
@@ -217,11 +262,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
-
+                android:layoutAnimation="@anim/layout_animation_up_to_down"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
-                android:padding="10dp"
+                android:padding="5dp"
                 android:scrollbars="vertical" />
         </androidx.core.widget.NestedScrollView>
 

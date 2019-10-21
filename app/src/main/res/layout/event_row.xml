@@ -14,13 +14,13 @@
         android:clickable="true"
         android:elevation="1dp"
         android:foreground="?attr/selectableItemBackground"
-        card_view:cardBackgroundColor="#008B2A2A"
+        card_view:cardBackgroundColor="#FAFAFA"
         card_view:cardCornerRadius="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/eventname"

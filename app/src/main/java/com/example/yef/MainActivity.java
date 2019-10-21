@@ -1,6 +1,7 @@
 package com.example.yef;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -10,17 +11,23 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -29,6 +36,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -38,6 +47,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,6 +60,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -61,6 +72,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,24 +116,44 @@ public class MainActivity extends AppCompatActivity {
     private HwAdapter hwAdapter;
     private TextView tv_month;
 
+    ProgressBar progressBar,progressBarcircle;
+
+    Toolbar toolbar;
+
     String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
+    String selectedGridDate;
+
+    boolean doubleBackToExitPressedOnce = false;
+
+    LinearLayout calendarcontainer;
+
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        whiteNotificationBar(findViewById(R.id.constraintlayoutroot));
+
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.app_name);
+        toolbar.setTitle("Youth Empowerment Foundation");
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 
         Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_downtool);
         toolbar.setAnimation(anim);
-        whiteNotificationBar(toolbar);
+
+
+        //whiteNotificationBar(toolbar);
+
+        progressBar = (ProgressBar) findViewById(R.id.my_progressBar);
+        //progressBarcircle=(ProgressBar)findViewById(R.id.progress_circular);
+
+        calendarcontainer=(LinearLayout)findViewById(R.id.calendarContainer);
 
         HomeCollection.date_collection_arr= new ArrayList<>();
 
-        get_events();
 
 
         calendar = Calendar.getInstance();
@@ -152,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new MyDividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL, 36));
+        int resId = R.anim.layout_animation_up_to_down;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(context, resId);
+        recyclerView.setLayoutAnimation(animation);
         recyclerView.setAdapter(mAdapter);
 
 
@@ -228,13 +263,39 @@ public class MainActivity extends AppCompatActivity {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                String selectedGridDate = HwAdapter.day_string.get(position);
+                selectedGridDate = HwAdapter.day_string.get(position);
                 get_edetails(selectedGridDate);
-                Toast.makeText(MainActivity.this, selectedGridDate, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, selectedGridDate, Toast.LENGTH_SHORT).show();
                // ((HwAdapter) parent.getAdapter()).getPositionList(selectedGridDate, MainActivity.this);
             }
 
         });
+
+        movingtextintoolbar();
+        get_events();
+
+    }
+
+    void movingtextintoolbar()
+    {
+        TextView titleTextView = null;
+
+        try {
+            Field f = toolbar.getClass().getDeclaredField("mTitleTextView");
+            f.setAccessible(true);
+            titleTextView = (TextView) f.get(toolbar);
+
+            titleTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            titleTextView.setFocusable(true);
+            titleTextView.setFocusableInTouchMode(true);
+            titleTextView.requestFocus();
+            titleTextView.setSingleLine(true);
+            titleTextView.setSelected(true);
+            titleTextView.setMarqueeRepeatLimit(-1);
+
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
+        }
     }
 
     //create event
@@ -570,8 +631,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void get_events()
-    {
-        JsonArrayRequest request = new JsonArrayRequest(getString(R.string.url)+"get_events.php",
+    {   progressBar.setVisibility(View.VISIBLE);
+        @SuppressLint("ResourceAsColor") JsonArrayRequest request = new JsonArrayRequest(getString(R.string.url)+"get_events.php",
                 response -> {
                     //Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
                     if (response == null) {
@@ -592,7 +653,23 @@ public class MainActivity extends AppCompatActivity {
                         }
                         //PD.dismiss();
                     }
+                    progressBar.setVisibility(View.GONE);
+                    calendarcontainer.setVisibility(View.VISIBLE);
+
                 }, error -> {
+                progressBar.setVisibility(View.GONE);
+                findViewById(R.id.constraintlayoutroot).setBackgroundColor(R.color.white);
+                Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Looks there's some network issue !", Snackbar.LENGTH_INDEFINITE);
+                sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
+                sb.setAction("RETRY?", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(getIntent());
+                    finish();
+                }
+            });
+            sb.setActionTextColor(getResources().getColor(R.color.red));
+            sb.show();
             //Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
         });
 
@@ -610,7 +687,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-
+                progressBar.setVisibility(View.VISIBLE);
 
             }
 
@@ -624,19 +701,32 @@ public class MainActivity extends AppCompatActivity {
                 {
                     if(Objects.equals(s.trim(), "error"))
                     {
-                        Toast.makeText(MainActivity.this,"Request Timed out!\n" + "Refresh Now..",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MainActivity.this,"Request Timed out!\n" + "Refresh Now..",Toast.LENGTH_LONG).show();
+                        Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Request Timed out!" + "Refresh Now..", Snackbar.LENGTH_LONG);
+                        sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
+                        sb.show();
                         contactList.clear();
                         mAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
                     }
                     else if(Objects.equals(s.trim(), "")) {
-                        Toast.makeText(MainActivity.this, "Unable to fetch data!", Toast.LENGTH_LONG).show();
+                        Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Unable to fetch data!", Snackbar.LENGTH_LONG);
+                        sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
+                        sb.show();
+                        //Toast.makeText(MainActivity.this, "Unable to fetch data!", Toast.LENGTH_LONG).show();
                         contactList.clear();
                         mAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
                     }
                     else if(Objects.equals(s.trim(), "[]")) {
                         contactList.clear();
                         mAdapter.notifyDataSetChanged();
-                        Toast.makeText(MainActivity.this, "Sorry, No events on "+date+"!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MainActivity.this, "Sorry, No events on "+selectedGridDate+"!", Toast.LENGTH_LONG).show();
+                        Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Sorry, No events on "+selectedGridDate+"!", Snackbar.LENGTH_LONG);
+                        sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
+                        sb.show();
+                        //Snackbar.make(findViewById(R.id.constraintlayoutroot), "Sorry, No events on "+selectedGridDate+"!", Snackbar.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
                     }
                     else
                     {
@@ -648,13 +738,20 @@ public class MainActivity extends AppCompatActivity {
                         contactList.clear();
                         contactList.addAll(items);
 
-                        // refreshing recycler view
+                        final LayoutAnimationController controller =
+                                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_up_to_down);
+
+                        recyclerView.setLayoutAnimation(controller);
                         mAdapter.notifyDataSetChanged();
+                        recyclerView.scheduleLayoutAnimation();
+
+                        progressBar.setVisibility(View.GONE);
                     }
                 }
                 catch (Exception e)
                 {
                     Toast.makeText(MainActivity.this, e.toString(),Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
                 }
 
                 //Toast.makeText(SellingPortal.this, s,Toast.LENGTH_LONG).show();
@@ -698,5 +795,59 @@ public class MainActivity extends AppCompatActivity {
         hwAdapter.refreshDays();
         hwAdapter.notifyDataSetChanged();
         tv_month.setText(android.text.format.DateFormat.format("MMMM yyyy", cal_month));
+    }
+
+    private void transparentToolbar() {
+        if (Build.VERSION.SDK_INT >= 17 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_FULLSCREEN, true);
+        }
+        if (Build.VERSION.SDK_INT >= 17) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN );
+        }
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+    }
+
+
+    private void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+            if (doubleBackToExitPressedOnce) {
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(1);
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+
+            Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Press BACK again to exit!", Snackbar.LENGTH_LONG);
+            sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
+/*            sb.setAction("Exit?", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //locationManager.removeUpdates(MainActivity.this);
+                    *//*android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(1);*//*
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(1);
+                }
+            });
+            sb.setActionTextColor(getResources().getColor(R.color.red));*/
+            sb.show();
+
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+
     }
 }

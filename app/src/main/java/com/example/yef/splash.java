@@ -29,13 +29,9 @@ public class splash extends AppCompatActivity {
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
 
-        ImageView imageView = findViewById(R.id.imageview1);
-
-        Glide.with(splash.this).load(R.drawable.ic_yef).into(imageView);
-
         //imageView.startAnimation(rotate);
-        Animation anim = AnimationUtils.loadAnimation(splash.this, R.anim.slide_down);
-        imageView.setAnimation(anim);
+/*        Animation anim = AnimationUtils.loadAnimation(splash.this, R.anim.slide_down);
+        imageView.setAnimation(anim);*/
 
 
         new Handler().postDelayed(new Runnable() {
