@@ -10,6 +10,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -128,6 +130,13 @@ public class MainActivity extends AppCompatActivity {
 
     LinearLayout calendarcontainer;
 
+    public static final String MyPREFERENCES = "MyPrefs";
+
+    boolean hasLoggedIn;
+    String usertype,name;
+
+    SharedPreferences sharedPreferences;
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,11 +147,20 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Youth Empowerment Foundation");
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 
         Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_downtool);
         toolbar.setAnimation(anim);
+
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+
+        SharedPreferences settings = getSharedPreferences(LoginActivity.MyPREFERENCES, 0);
+        //Get "hasLoggedIn" value. If the value doesn't exist yet false is returned
+        hasLoggedIn = settings.getBoolean("hasloggedin", false);
+        usertype = settings.getString("user_type", "yes");
+        name=settings.getString("name", "yes");
+
 
 
         //whiteNotificationBar(toolbar);
@@ -184,9 +202,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new MyDividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL, 36));
-        int resId = R.anim.layout_animation_up_to_down;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(context, resId);
-        recyclerView.setLayoutAnimation(animation);
         recyclerView.setAdapter(mAdapter);
 
 
@@ -432,11 +447,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if (user != null) {
+        if (hasLoggedIn) {
             // already signed in
             //Toast.makeText(MainActivity.this, "Welcome admin!", Toast.LENGTH_SHORT).show();
-            getMenuInflater().inflate(R.menu.options_menu_admin, menu);
-            fab.setVisibility(View.VISIBLE);
+            if(usertype.equals("Admin"))
+            {
+                getMenuInflater().inflate(R.menu.options_menu_admin, menu);
+                fab.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                getMenuInflater().inflate(R.menu.options_menu_admin, menu);
+                fab.setVisibility(View.GONE);
+            }
+
             return true;
         }
         else
@@ -451,12 +475,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (user != null) {
+        if (hasLoggedIn) {
             switch (id){
-                case R.id.dashboard:
-                    //intent for opening event details activity
-                    createvent();
-                    return true;
                 case R.id.share:
                     appShare();
                     return true;
@@ -464,11 +484,7 @@ public class MainActivity extends AppCompatActivity {
                     appRate();
                     return true;
                 case R.id.logout:
-                    Toast.makeText(getApplicationContext(), "Successfully logged out!", Toast.LENGTH_LONG).show();
-                    FirebaseAuth.getInstance().signOut();
-                    Intent i=getIntent();
-                    startActivity(i);
-                    finish();
+                    logout();
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
@@ -480,11 +496,10 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.admin_link:
                     //intent for opening event details activity
                     //Admin login
-
-                    login();
-                    //Intent intent = new Intent(MainActivity.this, Event_detail.class);
-                    //startActivity(intent);
-                    //finish();
+                    //login();
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
                     return true;
                 case R.id.share:
                     appShare();
@@ -498,39 +513,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void login()
+    void logout()
     {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // already signed in
-                    Toast.makeText(MainActivity.this, "Already Signed In!", Toast.LENGTH_SHORT).show();
-                } else {
-                    // not signed in
-                    startActivityForResult(
-                            // Get an instance of AuthUI based on the default app
-                            AuthUI.getInstance().createSignInIntentBuilder()
-                                    .setAvailableProviders(Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build()))
-                                    .build(), 1);
-
-                }
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("hasloggedin",false);
+        editor.apply();
+        Toast.makeText(getApplicationContext(), "Successfully logged out!", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+        finish();
     }
 
-    //method to check successful sign in
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                //do nothing
-                Intent i=getIntent();
-                startActivity(i);
-                finish();
-                Toast.makeText(MainActivity.this, "Welcome Admin!", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                //finish();
-            }
-        }
-    }
 
     private void appShare(){
 //        Method to share app with friends
@@ -632,6 +624,8 @@ public class MainActivity extends AppCompatActivity {
 
     void get_events()
     {   progressBar.setVisibility(View.VISIBLE);
+        TextView textView=(TextView)findViewById(R.id.textname);
+        textView.setText("Hey, "+name+"!");
         @SuppressLint("ResourceAsColor") JsonArrayRequest request = new JsonArrayRequest(getString(R.string.url)+"get_events.php",
                 response -> {
                     //Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
@@ -658,6 +652,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }, error -> {
                 progressBar.setVisibility(View.GONE);
+                findViewById(R.id.internet).setVisibility(View.VISIBLE);
                 findViewById(R.id.constraintlayoutroot).setBackgroundColor(R.color.white);
                 Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Looks there's some network issue !", Snackbar.LENGTH_INDEFINITE);
                 sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
@@ -688,6 +683,7 @@ public class MainActivity extends AppCompatActivity {
             protected void onPreExecute() {
                 super.onPreExecute();
                 progressBar.setVisibility(View.VISIBLE);
+
 
             }
 

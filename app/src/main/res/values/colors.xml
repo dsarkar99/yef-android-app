@@ -2,7 +2,26 @@
 <resources>
     <color name="colorPrimary">#311B92</color>
     <color name="colorPrimaryDark">#311B92</color>
-    <color name="colorAccent">#F3E5F5</color>
+    <color name="colorAccent">#29B6F6</color>
     <color name="white">#FFF</color>
     <color name="red">#D50000</color>
+
+    <color name="primary">#E43F3F</color>
+    <color name="primary_dark">#E12929</color>
+    <color name="primary_darker">#CC1D1D</color>
+    <color name="accent">#FFFFFF</color>
+
+    <color name="green">#0fda12</color>
+    <color name="green_darker">#0d870f</color>
+
+    <color name="black">#000000</color>
+    <color name="jet">#222222</color>
+    <color name="oil">#333333</color>
+    <color name="monsoon">#777777</color>
+    <color name="jumbo">#888888</color>
+    <color name="aluminum">#999999</color>
+    <color name="base">#AAAAAA</color>
+    <color name="iron">#CCCCCC</color>
+    
+    <color name="blue">#AB47BC</color>
 </resources>

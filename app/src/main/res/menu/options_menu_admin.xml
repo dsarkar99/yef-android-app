@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=" com.example.yef.AdminLogin">
 
 <!--    This menu is displayed once admin is logged in
@@ -8,9 +9,8 @@
         This menu is used in admin operation pages
 -->
 
-    <item
-        android:id="@+id/dashboard"
-        android:title="Create Events"/>
+
+
 
     <item
         android:id="@+id/rate"
@@ -22,4 +22,5 @@
     <item
         android:id="@+id/logout"
         android:title="Logout"/>
+
 </menu>
