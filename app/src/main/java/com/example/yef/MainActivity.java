@@ -159,7 +159,12 @@ public class MainActivity extends AppCompatActivity {
         //Get "hasLoggedIn" value. If the value doesn't exist yet false is returned
         hasLoggedIn = settings.getBoolean("hasloggedin", false);
         usertype = settings.getString("user_type", "yes");
-        name=settings.getString("name", "yes");
+        name=settings.getString("name", "");
+
+        if(name.equals(""))
+        {
+            findViewById(R.id.cardviewtxt).setVisibility(View.GONE);
+        }
 
 
 
@@ -247,14 +252,14 @@ public class MainActivity extends AppCompatActivity {
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cal_month.get(GregorianCalendar.MONTH) == 4&&cal_month.get(GregorianCalendar.YEAR)==2017) {
+/*                if (cal_month.get(GregorianCalendar.MONTH) == 4&&cal_month.get(GregorianCalendar.YEAR)==2017) {
                     //cal_month.set((cal_month.get(GregorianCalendar.YEAR) - 1), cal_month.getActualMaximum(GregorianCalendar.MONTH), 1);
                     Toast.makeText(MainActivity.this, "Event Detail is available for current session only.", Toast.LENGTH_SHORT).show();
                 }
-                else {
+                else {*/
                     setPreviousMonth();
                     refreshCalendar();
-                }
+               // }
 
 
             }
@@ -263,14 +268,14 @@ public class MainActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cal_month.get(GregorianCalendar.MONTH) == 5&&cal_month.get(GregorianCalendar.YEAR)==2018) {
+/*                if (cal_month.get(GregorianCalendar.MONTH) == 5&&cal_month.get(GregorianCalendar.YEAR)==2018) {
                     //cal_month.set((cal_month.get(GregorianCalendar.YEAR) + 1), cal_month.getActualMinimum(GregorianCalendar.MONTH), 1);
                     Toast.makeText(MainActivity.this, "Event Detail is available for current session only.", Toast.LENGTH_SHORT).show();
                 }
-                else {
+                else {*/
                     setNextMonth();
                     refreshCalendar();
-                }
+               // }
             }
         });
         GridView gridview = (GridView) findViewById(R.id.gv_calendar);
@@ -477,6 +482,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (hasLoggedIn) {
             switch (id){
+                case R.id.profile:
+                    startActivity(new Intent(MainActivity.this,Account.class));
+                    finish();
+                    return true;
                 case R.id.share:
                     appShare();
                     return true;
@@ -517,6 +526,10 @@ public class MainActivity extends AppCompatActivity {
     {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("hasloggedin",false);
+        editor.putString("name", "");
+        editor.putString("user_type", "");
+        editor.putString("userid", "");
+        editor.putString("email", "");
         editor.apply();
         Toast.makeText(getApplicationContext(), "Successfully logged out!", Toast.LENGTH_LONG).show();
         startActivity(new Intent(MainActivity.this,LoginActivity.class));
@@ -625,7 +638,7 @@ public class MainActivity extends AppCompatActivity {
     void get_events()
     {   progressBar.setVisibility(View.VISIBLE);
         TextView textView=(TextView)findViewById(R.id.textname);
-        textView.setText("Hey, "+name+"!");
+        textView.setText("Hi, "+name+"!");
         @SuppressLint("ResourceAsColor") JsonArrayRequest request = new JsonArrayRequest(getString(R.string.url)+"get_events.php",
                 response -> {
                     //Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();

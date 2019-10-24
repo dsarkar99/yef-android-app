@@ -111,17 +111,23 @@ public class LoginActivity extends AppCompatActivity {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
 
-                Toast.makeText(LoginActivity.this, s,Toast.LENGTH_LONG).show();
-                try {
-                    if (!Objects.equals(s.trim(), "error")) {
+                if(s.length()>=16 && s.length()<28)
+                { Toast.makeText(LoginActivity.this, s,Toast.LENGTH_LONG).show();}
+                else if(s.length()<16)
+                {
+                    Toast.makeText(LoginActivity.this, s,Toast.LENGTH_LONG).show();}
 
-                        JSONObject Object = new JSONObject(s);
+                try {
+                    if (!(s.trim().equals("error"))) {
+
+                        JSONObject Object = new JSONObject(s.trim());
                         String name = Object.getString("name");
                         String user_type = Object.getString("user_type");
                         String status = Object.getString("status");
-                        //String approval= Object.getString("approval");
+                        String userid= Object.getString("userid");
+                        String email= Object.getString("email");
 
-                        if (Objects.equals(status.trim(), "Blocked")) {
+                        if (s.trim().equals("Blocked")) {
                             btnLogin.setEnabled(true);
                             circle.setVisibility(View.GONE);
                             new AlertDialog.Builder(LoginActivity.this)
@@ -140,13 +146,13 @@ public class LoginActivity extends AppCompatActivity {
                                     .create()
                                     .show();
 
-                        } else if (Objects.equals(s.trim(), "User not found!")) {
+                        } else if (s.trim().equals("WPOEI")) {
                             btnLogin.setEnabled(true);
                             circle.setVisibility(View.GONE);
                             Toast.makeText(LoginActivity.this, "User not found!", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(LoginActivity.this, SignupActivity.class));
                             finish();
-                        } else if (Objects.equals(s.trim(), "Wrong Password or Email Id!")) {
+                        } else if (s.trim().equals("401")) {
                             btnLogin.setEnabled(true);
                             circle.setVisibility(View.GONE);
                             Toast.makeText(LoginActivity.this, "Wrong Password or Email id!", Toast.LENGTH_LONG).show();
@@ -179,6 +185,8 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putBoolean("hasloggedin",true);
                             editor.putString("name", name);
                             editor.putString("user_type", user_type);
+                            editor.putString("userid", userid);
+                            editor.putString("email", email);
                             editor.apply();
 
                             startActivity(new Intent(LoginActivity.this,MainActivity.class));

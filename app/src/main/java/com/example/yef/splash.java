@@ -57,7 +57,7 @@ public class splash extends AppCompatActivity {
 
                 try {
                     boolean reachable = InetAddress.getByName("google.com").isReachable(5000);
-                    if (!reachable) {
+                  //  if (!reachable) {
                         if (hasLoggedIn) {
                             //Go directly to main activity.
                             try {
@@ -75,7 +75,7 @@ public class splash extends AppCompatActivity {
                             startActivity(i);
                             finish();
                         }
-                    } else {
+/*                    } else {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(splash.this);
                         alertDialogBuilder.setTitle("Alert!");
                         alertDialogBuilder.setMessage("Unfortunately, YEF Server is down. We are very sorry for the inconvenience caused. Try again later...\n");
@@ -92,7 +92,7 @@ public class splash extends AppCompatActivity {
                             }
                         });
                         alertDialogBuilder.show();
-                    }
+                    }*/
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

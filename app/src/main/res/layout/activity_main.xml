@@ -32,13 +32,14 @@
 
 
 
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         card_view:cardCornerRadius="30dp"
-        app:cardElevation="20dp"
-        card_view:cardBackgroundColor="#FFF9C4"
+        app:cardElevation="10dp"
+        card_view:cardBackgroundColor="#01579B"
         android:padding="10dp">
 
         <RelativeLayout
@@ -86,16 +87,31 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="match_parent"
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layoutAnimation="@anim/layout_animation_up_to_down"
-                android:id="@+id/textname"
-                android:text="Name here"
-                android:textColor="#000"
-                android:textSize="20dp"
-                android:gravity="center_horizontal"
-                android:padding="10dp" />
+                android:id="@+id/cardviewtxt"
+                card_view:cardCornerRadius="3dp"
+                android:layout_marginTop="20dp"
+                app:cardElevation="5dp"
+                android:layout_centerHorizontal="true">
+
+                <TextView
+                    android:id="@+id/textname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layoutAnimation="@anim/layout_animation_up_to_down"
+                    android:padding="8dp"
+                    android:text="Name here"
+                    android:textColor="#000"
+                    android:textSize="15dp"
+                    android:textStyle="bold|italic" />
+
+
+
+            </androidx.cardview.widget.CardView>
 
 
 
@@ -111,10 +127,10 @@
                 android:id="@+id/calendarContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="30dp"
+                android:padding="25dp"
                 android:layoutAnimation="@anim/layout_animation_up_to_down"
                 android:orientation="vertical"
-                android:layout_below="@+id/textname"
+                android:layout_below="@+id/cardviewtxt"
                 android:visibility="invisible">
 
 
@@ -122,7 +138,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/calendarbg"
-                    android:layout_margin="4dp"
                     android:id="@+id/ll_calendar"
                     android:orientation="vertical" >
 
@@ -132,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:padding="10dp" >
+                        android:padding="5dp" >
 
                         <FrameLayout
                             android:layout_width="45dp"
@@ -278,7 +293,7 @@
                         android:gravity="center"
                         android:listSelector="@android:color/transparent"
                         android:numColumns="7"
-                        android:padding="2dp"
+                        android:padding="8dp"
                         android:stretchMode="columnWidth"
                         android:textAlignment="gravity" >
 
