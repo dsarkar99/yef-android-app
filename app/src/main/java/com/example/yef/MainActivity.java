@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -91,7 +92,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseUser user;
-
+    Bitmap bitmap;
     FirebaseAuth firebaseAuth;
     FloatingActionButton fab;
 
@@ -143,7 +144,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        whiteNotificationBar(findViewById(R.id.constraintlayoutroot));
+        //whiteNotificationBar(findViewById(R.id.constraintlayoutroot));
+
+        if (Build.VERSION.SDK_INT >= 17) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -201,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new eventadapter(MainActivity.this, contactList);
 
         // white background notification bar
-        whiteNotificationBar(recyclerView);
+        //whiteNotificationBar(recyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -246,6 +251,8 @@ public class MainActivity extends AppCompatActivity {
 
         tv_month = (TextView) findViewById(R.id.tv_month);
         tv_month.setText(android.text.format.DateFormat.format("MMMM yyyy", cal_month));
+
+
 
 
         ImageButton previous = (ImageButton) findViewById(R.id.ib_prev);
@@ -293,6 +300,7 @@ public class MainActivity extends AppCompatActivity {
 
         movingtextintoolbar();
         get_events();
+
 
     }
 
@@ -379,31 +387,7 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setCancelable(false);
 
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String Date=dateshow.getText().toString();
-                String uuid= UUID.randomUUID().toString();
-                String Eventname=eventname.getText().toString();
-                HashMap<String,String> eventMap=new HashMap<>();
-                eventMap.put("Event Name: ",Eventname);
-                ref.child("Events").child("Date: "+Date).child("Event Id: "+ uuid).setValue(eventMap)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful())
-                                {
-
-                                    Toast.makeText(MainActivity.this,"Event Created Successfully",Toast.LENGTH_SHORT).show();
-                                }
-                                else{
-                                    String message=task.getException().toString();
-                                    Toast.makeText(MainActivity.this,"Error: "+message,Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-            }
-        });
+        builder.setPositiveButton("Submit", null);
 // Set up the buttons
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -412,13 +396,36 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        builder.show();
+        //builder.show();
 
 
+        final AlertDialog mAlertDialog = builder.create();
+        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
+            @Override
+            public void onShow(final DialogInterface dialog) {
 
+                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
 
+                    b.setOnClickListener(new View.OnClickListener() {
 
+                        @Override
+                        public void onClick(View view) {
+                            //Validation check
+                            if(eventplace.getText().toString().trim().isEmpty()||eventname.getText().toString().trim().isEmpty()||esdate.getText().toString().trim().isEmpty()||eedate.getText().toString().trim().isEmpty()||eventtype.getText().toString().trim().isEmpty()||eventTime.getText().toString().trim().isEmpty()||eventdetails.getText().toString().trim().isEmpty())
+                            {
+                                Toast.makeText(MainActivity.this, "These are mandatory fields, Dont keep them empty",Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                create_event(eventname.getText().toString().trim(),eventplace.getText().toString().trim(),esdate.getText().toString().trim(),eedate.getText().toString().trim(),eventtype.getText().toString().trim(),eventTime.getText().toString().trim(),eventdetails.getText().toString().trim());
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+            }
+        });
+        mAlertDialog.show();
 
 
 
@@ -626,13 +633,13 @@ public class MainActivity extends AppCompatActivity {
             };
 
     void showDate(int year, int month, int day) {
-        esdate.setText(new StringBuilder().append(day).append("-")
-                .append(monthNames[month-1]).append("-").append(year));
+        esdate.setText(new StringBuilder().append(year).append("-")
+                .append(month).append("-").append(day));
     }
 
     void showDate2(int year, int month, int day) {
-        eedate.setText(new StringBuilder().append(day).append("-")
-                .append(monthNames[month-1]).append("-").append(year));
+        eedate.setText(new StringBuilder().append(year).append("-")
+                .append(month).append("-").append(day));
     }
 
     void get_events()
@@ -662,6 +669,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     progressBar.setVisibility(View.GONE);
                     calendarcontainer.setVisibility(View.VISIBLE);
+                    refreshCalendar();
 
                 }, error -> {
                 progressBar.setVisibility(View.GONE);
@@ -682,6 +690,68 @@ public class MainActivity extends AppCompatActivity {
         });
 
         MyApplication.getInstance().addToRequestQueue(request);
+    }
+
+
+
+    void create_event(final String ename, final String eplace, final String sdate, final String edate, final String etype, final String etime, final String edetails)
+    {
+        @SuppressLint("StaticFieldLeak")
+        class UploadImage extends AsyncTask<Bitmap,Void,String> {
+            private ProgressDialog loading;
+            RequestHandler rh = new RequestHandler();
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                loading = ProgressDialog.show(MainActivity.this, "Creating a Event...", "Please Wait...");
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+
+                if(Objects.equals(s.trim(), "error"))
+                {
+                    Toast.makeText(MainActivity.this, "Server error,Try again later!",Toast.LENGTH_LONG).show();
+                    loading.dismiss();
+                }
+                else
+                {   loading.dismiss();
+                    Toast.makeText(MainActivity.this, "Successfully scheduled "+ename+" on "+sdate+" at "+etime,Toast.LENGTH_LONG).show();
+
+                    Intent intent=getIntent();
+                    startActivity(intent);
+                    finish();
+                }
+
+                //Toast.makeText(SellingPortal.this, s,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            protected String doInBackground(Bitmap... params) {
+                bitmap = params[0];
+
+                HashMap<String,String> data = new HashMap<>();
+                data.put("ename",ename);
+                data.put("eplace",eplace);
+                data.put("sdate",sdate);
+                data.put("edate",edate);
+                data.put("etype",etype);
+                data.put("etime",etime);
+                data.put("edetails",edetails);
+                String result = rh.sendPostRequest(getString(R.string.url)+"create_events.php",data);
+
+                return result;
+            }
+        }
+
+        UploadImage ui = new UploadImage();
+        ui.execute(bitmap);
     }
 
 

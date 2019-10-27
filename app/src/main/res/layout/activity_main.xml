@@ -6,45 +6,50 @@
     android:id="@+id/constraintlayoutroot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="#ffc107"
     tools:context=".MainActivity"
     >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/toolbarbg"
+        tools:ignore="MissingConstraints"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginEnd="2dp">
+
+    </androidx.appcompat.widget.Toolbar>
 
     <ProgressBar
         android:id="@+id/my_progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="13dp"
-        android:layout_marginTop="-5dp"
+        android:layout_width="400dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="-4dp"
         android:background="@color/colorPrimary"
         android:indeterminate="true"
+        android:layout_centerHorizontal="true"
         android:visibility="visible" />
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/toolbarbg"
-                android:layout_below="@id/my_progressBar"
-                tools:ignore="MissingConstraints">
-
-            </androidx.appcompat.widget.Toolbar>
 
 
 
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        card_view:cardCornerRadius="30dp"
-        app:cardElevation="10dp"
-        card_view:cardBackgroundColor="#01579B"
-        android:padding="10dp">
+
+
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/mainpage"
+            android:layout_below="@id/toolbar"
+            android:layout_marginStart="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="2dp">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabadmin"
@@ -55,7 +60,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginEnd="1dp"
                 android:layout_marginRight="1dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="8dp"
                 android:visibility="visible"
                 app:backgroundTint="@color/common_google_signin_btn_text_light_default"
                 app:srcCompat="@android:drawable/ic_menu_add" />
@@ -127,7 +132,8 @@
                 android:id="@+id/calendarContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="25dp"
+                android:padding="20dp"
+                android:layout_centerHorizontal="true"
                 android:layoutAnimation="@anim/layout_animation_up_to_down"
                 android:orientation="vertical"
                 android:layout_below="@+id/cardviewtxt"
@@ -320,10 +326,6 @@
 
         </RelativeLayout>
 
-
-
-
-    </androidx.cardview.widget.CardView>
 
 
 

@@ -24,7 +24,11 @@ import com.example.yef.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.reflect.Modifier;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class eventadapter extends RecyclerView.Adapter<eventadapter.MyViewHolder> {
@@ -68,18 +72,56 @@ public class eventadapter extends RecyclerView.Adapter<eventadapter.MyViewHolder
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
+                DateFormat df = new SimpleDateFormat("HH:mm");
+                //Date/time pattern of desired output date
+                DateFormat outputformat = new SimpleDateFormat("hh:mm aa");
+                Date date = null;
+                String output = null;
+                try{
+                    //Conversion of input String to date
+                    date= df.parse(pdf.getTime());
+                    //old date format to new date format
+                    output = outputformat.format(date);
+                    //System.out.println(output);
+                }catch(ParseException pe){
+                    pe.printStackTrace();
+                }
                                       Intent modify_intent = new Intent(context, Event_detail.class);
                                       modify_intent.putExtra("eventname", pdf.getname());
                 modify_intent.putExtra("venue", pdf.getVenue());
                 modify_intent.putExtra("esdate", pdf.getStart_date());
                 modify_intent.putExtra("eedate", pdf.getEnd_date());
-                modify_intent.putExtra("etime", pdf.getTime());
+                modify_intent.putExtra("etime", output);
                 modify_intent.putExtra("etype", pdf.getEvent_type());
                 modify_intent.putExtra("edetails", pdf.getEvent_details());
                 //Toast.makeText(context, pdf.getname(), Toast.LENGTH_SHORT).show();
                 context.startActivity(modify_intent);
             }
         });
+/*        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                DateFormat df = new SimpleDateFormat("HH:mm");
+                //Date/time pattern of desired output date
+                DateFormat outputformat = new SimpleDateFormat("hh:mm aa");
+                Date date = null;
+                String output = null;
+                try{
+                    //Conversion of input String to date
+                    date= df.parse(pdf.getTime());
+                    //old date format to new date format
+                    output = outputformat.format(date);
+                    //System.out.println(output);
+                    Snackbar sb = Snackbar.make(v, output, Snackbar.LENGTH_LONG);
+                    sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.snackbarbg));
+                    sb.show();
+                }catch(ParseException pe){
+                    pe.printStackTrace();
+                }
+
+                return true;
+            }
+        });*/
 
     }
 

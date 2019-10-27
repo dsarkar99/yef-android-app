@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -57,6 +58,14 @@ public class Event_detail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 open_direction(s2);
+            }
+        });
+
+        FloatingActionButton floatingActionButton=(FloatingActionButton)findViewById(R.id.faback);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 
