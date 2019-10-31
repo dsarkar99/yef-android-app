@@ -110,9 +110,18 @@ public class SignupActivity extends AppCompatActivity {
                 super.onPostExecute(s);
                 loading.dismiss();
                 //startActivity(new Intent(Event.this,Event.class));
-                Toast.makeText(SignupActivity.this, s,Toast.LENGTH_LONG).show();
-                startActivity(new Intent(SignupActivity.this,LoginActivity.class));
-                Toast.makeText(SignupActivity.this, "Login Now!",Toast.LENGTH_LONG).show();
+                if(s.trim().equals("Registered Successfully!"))
+                {
+                    Toast.makeText(SignupActivity.this, s,Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(SignupActivity.this,LoginActivity.class));
+                    Toast.makeText(SignupActivity.this, "Login Now!",Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(SignupActivity.this, s,Toast.LENGTH_LONG).show();
+                }
+
+
 
             }
 

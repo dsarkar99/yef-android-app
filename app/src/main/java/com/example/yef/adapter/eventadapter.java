@@ -1,6 +1,7 @@
 package com.example.yef.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -96,6 +97,7 @@ public class eventadapter extends RecyclerView.Adapter<eventadapter.MyViewHolder
                 modify_intent.putExtra("edetails", pdf.getEvent_details());
                 //Toast.makeText(context, pdf.getname(), Toast.LENGTH_SHORT).show();
                 context.startActivity(modify_intent);
+                ((Activity)context).finish();
             }
         });
 /*        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {

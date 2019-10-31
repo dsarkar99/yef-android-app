@@ -117,6 +117,10 @@ public class LoginActivity extends AppCompatActivity {
                 {
                     Toast.makeText(LoginActivity.this, s,Toast.LENGTH_LONG).show();}
 
+               // Toast.makeText(LoginActivity.this, s,Toast.LENGTH_LONG).show();
+
+
+
                 try {
                     if (!(s.trim().equals("error"))) {
 
@@ -127,14 +131,14 @@ public class LoginActivity extends AppCompatActivity {
                         String userid= Object.getString("userid");
                         String email= Object.getString("email");
 
-                        if (s.trim().equals("Blocked")) {
+                        if (status.trim().equals("Blocked")) {
                             btnLogin.setEnabled(true);
                             circle.setVisibility(View.GONE);
                             new AlertDialog.Builder(LoginActivity.this)
                                     .setCancelable(false)
                                     .setIcon(R.mipmap.ic_launcher_round)
                                     .setTitle("Alert:")
-                                    .setMessage("Sorry " + name + ", Your Account is Blocked!\n" +
+                                    .setMessage("Sorry " + name + ", Your YEF Account is Blocked!\n" +
                                             "CONTACT ADMIN NOW")
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override

@@ -726,6 +726,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent=getIntent();
                     startActivity(intent);
                     finish();
+                    //refreshCalendar();
                 }
 
                 //Toast.makeText(SellingPortal.this, s,Toast.LENGTH_LONG).show();

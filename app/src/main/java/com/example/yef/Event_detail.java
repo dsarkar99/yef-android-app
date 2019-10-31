@@ -147,7 +147,7 @@ public class Event_detail extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //super.onBackPressed();
         Intent intent = new Intent(Event_detail.this, MainActivity.class);
         startActivity(intent);
         finish();

@@ -7,7 +7,8 @@
     android:paddingTop="24dp"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    android:gravity="center_vertical">
 
     <ImageView
         android:layout_width="90dp"
@@ -98,8 +99,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Already a member? Login"
+        android:textSize="14dp"
         android:gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/green"
         android:textColorHint="@color/white"/>
 
 

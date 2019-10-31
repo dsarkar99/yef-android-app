@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/colorPrimaryDark"
-    android:padding="30dp"
+    android:padding="10dp"
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
     >
@@ -17,8 +17,7 @@
         android:paddingTop="24dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-
->
+        android:layout_gravity="center_vertical">
 
         <ImageView
             android:src="@drawable/yeficon"
@@ -85,9 +84,9 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
             android:text="No account yet? Create one"
-            android:textColor="@color/white"
+            android:textColor="@color/green"
             android:gravity="center"
-            android:textSize="16dp"/>
+            android:textSize="14dp"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
