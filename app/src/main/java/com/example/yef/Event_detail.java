@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +37,11 @@ public class Event_detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_detail);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
         String s1=Objects.requireNonNull(getIntent().getExtras()).getString("eventname");
         final String s2=Objects.requireNonNull(getIntent().getExtras()).getString("venue");
         String s3=Objects.requireNonNull(getIntent().getExtras()).getString("esdate");
@@ -54,6 +61,13 @@ public class Event_detail extends AppCompatActivity {
         TextView edetails=(TextView)findViewById(R.id.eventHost_display);
 
         Button btn_direction=(Button)findViewById(R.id.btn_direction);
+        Button btn_register=(Button)findViewById(R.id.btn_register);
+        btn_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Event_detail.this,"Feature Currently Unavailable!",Toast.LENGTH_LONG).show();
+            }
+        });
         btn_direction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     String usertype,name;
 
     SharedPreferences sharedPreferences;
+    String email;
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -146,16 +147,17 @@ public class MainActivity extends AppCompatActivity {
 
         //whiteNotificationBar(findViewById(R.id.constraintlayoutroot));
 
-        if (Build.VERSION.SDK_INT >= 17) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 
-        Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_downtool);
-        toolbar.setAnimation(anim);
+/*        Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_downtool);
+        toolbar.setAnimation(anim);*/
 
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
@@ -165,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
         hasLoggedIn = settings.getBoolean("hasloggedin", false);
         usertype = settings.getString("user_type", "yes");
         name=settings.getString("name", "");
+        email=settings.getString("email","");
+
 
         if(name.equals(""))
         {
@@ -531,17 +535,64 @@ public class MainActivity extends AppCompatActivity {
 
     void logout()
     {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("hasloggedin",false);
-        editor.putString("name", "");
-        editor.putString("user_type", "");
-        editor.putString("userid", "");
-        editor.putString("email", "");
-        editor.apply();
-        Toast.makeText(getApplicationContext(), "Successfully logged out!", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(MainActivity.this,LoginActivity.class));
-        finish();
+        @SuppressLint("StaticFieldLeak")
+        class UploadImage extends AsyncTask<Bitmap,Void,String> {
+            private ProgressDialog loading;
+            RequestHandler rh = new RequestHandler();
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                loading = ProgressDialog.show(MainActivity.this, "", "Logging out...");
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                if(Objects.equals(s.trim(), "error"))
+                {
+                    Toast.makeText(MainActivity.this, "Server error,Try again later!",Toast.LENGTH_LONG).show();
+                    loading.dismiss();
+                }
+                else if(Objects.equals(s.trim(), "Success"))
+                {   loading.dismiss();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("hasloggedin",false);
+                    editor.putString("name", "");
+                    editor.putString("user_type", "");
+                    editor.putString("userid", "");
+                    editor.putString("email", "");
+                    editor.apply();
+                    Toast.makeText(getApplicationContext(), "Successfully logged out!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                    finish();
+                    //refreshCalendar();
+                }
+
+            }
+
+            @Override
+            protected String doInBackground(Bitmap... params) {
+                bitmap = params[0];
+
+                HashMap<String,String> data = new HashMap<>();
+                data.put("email",email);
+                String result = rh.sendPostRequest(getString(R.string.url)+"logout.php",data);
+
+                return result;
+            }
+        }
+
+        UploadImage ui = new UploadImage();
+        ui.execute(bitmap);
     }
+
+
+
+
 
 
     private void appShare(){
@@ -668,8 +719,17 @@ public class MainActivity extends AppCompatActivity {
                         //PD.dismiss();
                     }
                     progressBar.setVisibility(View.GONE);
+
+                    final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
+
+                    // Use bounce interpolator with amplitude 0.2 and frequency 20
+                    MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+                    myAnim.setInterpolator(interpolator);
+
                     calendarcontainer.setVisibility(View.VISIBLE);
                     refreshCalendar();
+
+                    calendarcontainer.startAnimation(myAnim);
 
                 }, error -> {
                 progressBar.setVisibility(View.GONE);

@@ -14,16 +14,24 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
@@ -40,9 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     Button btnLogin;
 
     ProgressBar circle;
-
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences sharedpreferences;
+    TextView countdown,alert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +62,18 @@ public class LoginActivity extends AppCompatActivity {
         txtPassword = (EditText) findViewById(R.id.input_password);
         btnLogin = (Button) findViewById(R.id.btn_login);
         circle=(ProgressBar)findViewById(R.id.progress_circular);
+        ImageView imageView=(ImageView)findViewById(R.id.logo);
+
+        Glide.with(LoginActivity.this).load(R.drawable.yeficon).apply(RequestOptions.circleCropTransform()).into(imageView);
+
+        //imageView.startAnimation(rotate);
+
+        imageView.setAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_in));
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+
+
 
         linkSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,9 +84,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
+
+        // Use bounce interpolator with amplitude 0.2 and frequency 20
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 25);
+        myAnim.setInterpolator(interpolator);
+
+
+
+
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnLogin.startAnimation(myAnim);
                 if(txtEmail.getText().toString().trim().isEmpty()){
                     txtEmail.setError("This field is required!");
                 }else if(!isValidEmail(txtEmail.getText().toString().trim())){
@@ -76,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                 }else if(txtPassword.getText().toString().trim().isEmpty()){
                     txtPassword.setError("This field is required!");
                 }else{
-                    btnLogin.setEnabled(false);
+                    //btnLogin.setEnabled(false);
                     circle.setVisibility(View.VISIBLE);
                     login();
                     //Snackbar.make(v, "No validation errors, continue login", Snackbar.LENGTH_LONG).setAction("Action",null).show();
@@ -130,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
                         String status = Object.getString("status");
                         String userid= Object.getString("userid");
                         String email= Object.getString("email");
+                        String acnt_status=Object.getString("acnt_status");
 
                         if (status.trim().equals("Blocked")) {
                             btnLogin.setEnabled(true);
@@ -150,6 +180,11 @@ public class LoginActivity extends AppCompatActivity {
                                     .create()
                                     .show();
 
+                        }else if (acnt_status.equals("0")) {
+                            btnLogin.setEnabled(true);
+                            circle.setVisibility(View.GONE);
+                            Toast.makeText(LoginActivity.this, "Account Not Verified!", Toast.LENGTH_LONG).show();
+                            enter_otp(name,email,userid);
                         } else if (s.trim().equals("WPOEI")) {
                             btnLogin.setEnabled(true);
                             circle.setVisibility(View.GONE);
@@ -232,13 +267,204 @@ public class LoginActivity extends AppCompatActivity {
         ui.execute(bitmap[0]);
     }
 
+    void enter_otp(String gname,String gemail,String user_id)
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Verify OTP to Activate Account!");
+        builder.setMessage("To activate your Account please check you mail or spam box!");
+        builder.setIcon(R.mipmap.ic_launcher_round);
+
+        final View viewInflated = LayoutInflater.from(this).inflate(R.layout.otp_verify_login, (ViewGroup) findViewById(R.id.f1), false);
+
+        EditText otp=viewInflated.findViewById(R.id.otp) ;
+        countdown=viewInflated.findViewById(R.id.countdown);
+        alert=viewInflated.findViewById(R.id.alert);
+        alert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendOTP(gemail,gname);
+            }
+        });
+
+        TextView textViewemail=viewInflated.findViewById(R.id.email);
+        textViewemail.setText(gemail);
+
+        builder.setView(viewInflated);
+
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("Verify", null);
+// Set up the buttons
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        //builder.show();
+
+
+        final AlertDialog mAlertDialog = builder.create();
+        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialog) {
+
+                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        //Validation check
+                        if(otp.getText().toString().trim().isEmpty())
+                        {
+                            Toast.makeText(LoginActivity.this, "You have not entered any OTP",Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            verify_otp(otp.getText().toString().trim(),user_id,gemail,gname);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+        mAlertDialog.show();
+    }
+
+    void verify_otp(String getotp,String user_id,String email ,String name)
+    {
+        final Bitmap[] bitmap = new Bitmap[1];
+        class UploadImage extends AsyncTask<Bitmap,Void,String> {
+
+            ProgressDialog loading;
+            RequestHandler rh = new RequestHandler();
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                loading = ProgressDialog.show(LoginActivity.this, "Verifying Otp...", null);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                //startActivity(new Intent(Event.this,Event.class));
+                if(s.trim().equals("Registered Successfully!"))
+                {
+                    Toast.makeText(LoginActivity.this, "Account Activated!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Login Now!",Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(LoginActivity.this, s,Toast.LENGTH_LONG).show();
+                }
+
+
+
+            }
+
+            @Override
+            protected String doInBackground(Bitmap... params) {
+                bitmap[0] = params[0];
+
+                HashMap<String,String> data = new HashMap<>();
+                data.put("otp", getotp);
+                data.put("v_email",txtEmail.getText().toString().trim());
+                data.put("name", name);
+                data.put("user_id", user_id);
+                String result = rh.sendPostRequest(getString(R.string.url)+"verifyotp_yef.php",data);
+
+                return result;
+            }
+        }
+
+        UploadImage ui = new UploadImage();
+        ui.execute(bitmap[0]);
+    }
+
+    void sendOTP(String email_id,String name)
+    {
+        final Bitmap[] bitmap = new Bitmap[1];
+        class UploadImage extends AsyncTask<Bitmap,Void,String> {
+
+            ProgressDialog loading;
+            RequestHandler rh = new RequestHandler();
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                loading = ProgressDialog.show(LoginActivity.this, "Sending OTP in your mail id...", null);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                //startActivity(new Intent(Event.this,Event.class));
+                if(s.trim().equals("Registered Successfully!"))
+                {
+                    Toast.makeText(LoginActivity.this, "OTP sent!",Toast.LENGTH_LONG).show();
+                    alert.setVisibility(View.GONE);
+                    countdown.setVisibility(View.VISIBLE);
+                    startcoundown();
+                }
+                else
+                {
+                    Toast.makeText(LoginActivity.this, s,Toast.LENGTH_LONG).show();
+                }
+
+
+            }
+
+            @Override
+            protected String doInBackground(Bitmap... params) {
+                bitmap[0] = params[0];
+
+                HashMap<String,String> data = new HashMap<>();
+                data.put("v_email",email_id);
+                data.put("name",name);
+                String result = rh.sendPostRequest(getString(R.string.url)+"send_otp_again.php",data);
+
+                return result;
+            }
+        }
+
+        UploadImage ui = new UploadImage();
+        ui.execute(bitmap[0]);
+    }
+
+    void startcoundown()
+    {
+        new CountDownTimer(10000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                countdown.setText("Try resending after " + millisUntilFinished / 1000+" seconds!");
+                //here you can have your logic to set text to edittext
+            }
+
+            public void onFinish() {
+                alert.setVisibility(View.VISIBLE);
+                countdown.setVisibility(View.GONE);
+            }
+
+        }.start();
+    }
+
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+/*        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
-        finish();
+        finish();*/
     }
 
 

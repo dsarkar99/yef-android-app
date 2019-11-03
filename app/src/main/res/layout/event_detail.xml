@@ -7,36 +7,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Event_detail"
-    android:background="@drawable/toolbarbg">
+    android:background="@drawable/bgshade2">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        >
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/faback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             app:backgroundTint="@color/common_google_signin_btn_text_light_default"
             app:srcCompat="@drawable/ic_back" />
 
         <androidx.cardview.widget.CardView
             android:layout_below="@+id/faback"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            card_view:cardCornerRadius="20dp"
-            app:cardElevation="10dp"
-            card_view:cardBackgroundColor="#ccff90"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="25dp"
+            app:cardElevation="2dp"
             android:layout_centerVertical="true"
-            android:layout_margin="15dp">
+            android:layout_margin="10dp">
 
             <RelativeLayout
 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="40dp">
+                android:padding="20dp"
+                android:background="@drawable/bgshade3"
+                android:layoutAnimation="@anim/layout_animation_up_to_down">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -196,32 +199,35 @@
 
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/rel1"
                     android:layout_marginTop="5dp"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:padding="10dp">
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:padding="20dp">
 
 
                     <Button
                         android:id="@+id/btn_direction"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Directions" />
+                        android:text="Directions"
+                        android:gravity="center_horizontal"
+                        android:layout_margin="2dp" />
 
                     <Button
                         android:id="@+id/btn_register"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/btn_direction"
-                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="2dp"
                         android:text="Register Now!" />
 
 
-                </LinearLayout>
+                </RelativeLayout>
 
 
             </RelativeLayout>
