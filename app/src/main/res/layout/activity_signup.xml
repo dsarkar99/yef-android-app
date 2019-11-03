@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bgshade1">
+
+<LinearLayout
     android:id="@+id/ll"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -25,14 +32,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white">
+        android:textColor="@color/black"
+        android:textColorHint="@color/black">
         <EditText
             android:id="@+id/txt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:hint="Name"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -42,14 +49,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white">
+        android:textColor="@color/black"
+        android:textColorHint="@color/black">
         <EditText
             android:id="@+id/txt_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:hint="Email"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,13 +66,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white">
+        android:textColor="@color/black"
+        android:textColorHint="@color/black">
         <EditText
             android:id="@+id/txt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:inputType="textPassword"
             android:hint="Password"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -76,14 +83,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white">
+        android:textColor="@color/black"
+        android:textColorHint="@color/black">
         <EditText
             android:id="@+id/txt_confirm_pwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:hint="Confirm Password"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,6 +105,8 @@
         android:padding="5dp"
         android:textColor="@color/jet"
         android:background="@drawable/buttonbg"
+        android:backgroundTint="@color/colorAccent2"
+        android:textAllCaps="false"
         android:text="Create Account" />
 
     <ProgressBar
@@ -112,11 +121,13 @@
         android:id="@+id/link_signin"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:text="Already a member? Login"
-        android:textSize="14dp"
+        android:text="@string/login"
+        android:textSize="14sp"
         android:gravity="center"
-        android:textColor="@color/green"
-        android:textColorHint="@color/white"/>
+        android:textStyle="bold"
+        android:textColor="@color/black"
+       />
 
 
 </LinearLayout>
+</ScrollView>

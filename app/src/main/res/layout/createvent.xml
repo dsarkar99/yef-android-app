@@ -39,14 +39,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/fui_buttonShadow"
+            android:background="@color/colorAccent2"
             android:gravity="center"
             android:hint="Select Event Start Date"
             android:inputType="date"
+
             android:padding="9dp"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black"
-            android:textSize="17dp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
 
@@ -57,14 +58,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/fui_buttonShadow"
+            android:background="@color/colorAccent2"
             android:gravity="center"
             android:hint="Select Event End Date"
             android:inputType="date"
             android:padding="9dp"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black"
-            android:textSize="17dp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -73,14 +74,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/fui_buttonShadow"
+            android:background="@color/colorAccent2"
             android:gravity="center"
             android:hint="Select Event Time"
             android:inputType="date"
             android:padding="9dp"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black"
-            android:textSize="17dp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <EditText

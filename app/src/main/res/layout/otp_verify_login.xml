@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/f1">
+    android:id="@+id/f1"
+    android:background="#fff">
 
 
     <RelativeLayout
@@ -21,7 +22,7 @@
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:textSize="18dp"/>
+            android:textSize="18sp"/>
 
         <EditText
             android:id="@+id/otp"
@@ -44,9 +45,9 @@
             android:layout_below="@+id/otp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:background="#fff"
+
             android:text="Did not receive any OTP in mail? \n
-            Send OTP again?"
+            Send OTP again?                 "
             android:textAlignment="center"
             android:textColor="@color/red"
             android:textStyle="bold" />
@@ -61,7 +62,7 @@
             android:background="#fff"
             android:text=""
             android:textAlignment="center"
-            android:textColor="@color/red"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"
             android:visibility="gone"/>
 

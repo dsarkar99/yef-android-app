@@ -71,4 +71,6 @@
     <string name="no_account">Don\’t have an account?</string>
     <string name="have_account">Have an account?</string>
     <string name="divider_or">OR</string>
+    <string name="no_account_yet">No account yet? <u>Create</u> one</string>
+    <string name="login">Already a member? <u>Login</u></string>
 </resources>

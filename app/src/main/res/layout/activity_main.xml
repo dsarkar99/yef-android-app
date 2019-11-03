@@ -14,7 +14,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/toolbarbg"
+        android:background="@color/light_red"
         tools:ignore="MissingConstraints"
         android:paddingTop="@dimen/fui_wrapper_padding_horiz"
         android:layout_marginTop="1dp"
@@ -27,7 +27,9 @@
     <ProgressBar
         android:id="@+id/my_progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="320dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_height="10dp"
         android:layout_marginTop="25dp"
         android:background="@color/colorPrimary"
@@ -59,8 +61,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="10dp"
+
                 android:visibility="visible"
+                android:layout_margin="16dp"
                 app:backgroundTint="@color/common_google_signin_btn_text_light_default"
                 app:srcCompat="@android:drawable/ic_menu_add" />
 
@@ -111,8 +114,9 @@
                     android:layoutAnimation="@anim/layout_animation_up_to_down"
                     android:padding="8dp"
                     android:text="Name here"
+                    android:background="@color/peach"
                     android:textColor="#000"
-                    android:textSize="15dp"
+                    android:textSize="16sp"
                     android:textStyle="bold|italic" />
 
 

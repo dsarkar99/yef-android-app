@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Event_detail"
-    android:background="@drawable/bgshade2">
+    android:background="@color/bright_yel">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             android:layout_margin="20dp"
+
             app:backgroundTint="@color/common_google_signin_btn_text_light_default"
             app:srcCompat="@drawable/ic_back" />
 
@@ -38,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="20dp"
-                android:background="@drawable/bgshade3"
+
                 android:layoutAnimation="@anim/layout_animation_up_to_down">
 
                 <RelativeLayout
