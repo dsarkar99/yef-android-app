@@ -63,7 +63,7 @@
                 android:layout_alignParentBottom="true"
 
                 android:visibility="visible"
-                android:layout_margin="16dp"
+                android:layout_margin="10dp"
                 app:backgroundTint="@color/common_google_signin_btn_text_light_default"
                 app:srcCompat="@android:drawable/ic_menu_add" />
 

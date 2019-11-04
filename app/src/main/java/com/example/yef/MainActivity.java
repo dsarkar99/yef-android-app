@@ -179,10 +179,10 @@ public class MainActivity extends AppCompatActivity {
 
         //whiteNotificationBar(toolbar);
 
-        progressBar = (ProgressBar) findViewById(R.id.my_progressBar);
+        progressBar = findViewById(R.id.my_progressBar);
         //progressBarcircle=(ProgressBar)findViewById(R.id.progress_circular);
 
-        calendarcontainer=(LinearLayout)findViewById(R.id.calendarContainer);
+        calendarcontainer= findViewById(R.id.calendarContainer);
 
         HomeCollection.date_collection_arr= new ArrayList<>();
 
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         day = calendar.get(Calendar.DAY_OF_MONTH);
 
 
-        fab=(FloatingActionButton) findViewById(R.id.fabadmin);
+        fab= findViewById(R.id.fabadmin);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -253,13 +253,13 @@ public class MainActivity extends AppCompatActivity {
         cal_month_copy = (GregorianCalendar) cal_month.clone();
         hwAdapter = new HwAdapter(this, cal_month,HomeCollection.date_collection_arr);
 
-        tv_month = (TextView) findViewById(R.id.tv_month);
+        tv_month = findViewById(R.id.tv_month);
         tv_month.setText(android.text.format.DateFormat.format("MMMM yyyy", cal_month));
 
 
 
 
-        ImageButton previous = (ImageButton) findViewById(R.id.ib_prev);
+        ImageButton previous = findViewById(R.id.ib_prev);
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        ImageButton next = (ImageButton) findViewById(R.id.Ib_next);
+        ImageButton next = findViewById(R.id.Ib_next);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
                // }
             }
         });
-        GridView gridview = (GridView) findViewById(R.id.gv_calendar);
+        GridView gridview = findViewById(R.id.gv_calendar);
         gridview.setAdapter(hwAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Welcome Admin");
         builder.setIcon(R.mipmap.ic_launcher_round);*/
 
-        final View viewInflated = LayoutInflater.from(this).inflate(R.layout.createvent, (ViewGroup) findViewById(R.id.f1), false);
+        final View viewInflated = LayoutInflater.from(this).inflate(R.layout.createvent, findViewById(R.id.f1), false);
 
 
         eventname = viewInflated.findViewById(R.id.eventname);
@@ -695,7 +695,7 @@ public class MainActivity extends AppCompatActivity {
 
     void get_events()
     {   progressBar.setVisibility(View.VISIBLE);
-        TextView textView=(TextView)findViewById(R.id.textname);
+        TextView textView= findViewById(R.id.textname);
         textView.setText("Hi, "+name+"!");
         @SuppressLint("ResourceAsColor") JsonArrayRequest request = new JsonArrayRequest(getString(R.string.url)+"get_events.php",
                 response -> {
@@ -735,9 +735,12 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 findViewById(R.id.internet).setVisibility(View.VISIBLE);
                 findViewById(R.id.constraintlayoutroot).setBackgroundColor(R.color.white);
-                Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Looks there's some network issue !", Snackbar.LENGTH_INDEFINITE);
+                Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Looks like there's some network issue !", Snackbar.LENGTH_INDEFINITE);
                 sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
-                sb.setAction("RETRY?", new View.OnClickListener() {
+            TextView tv=sb.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+            tv.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+
+            sb.setAction("RETRY?", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     startActivity(getIntent());
@@ -844,6 +847,9 @@ public class MainActivity extends AppCompatActivity {
                         //Toast.makeText(MainActivity.this,"Request Timed out!\n" + "Refresh Now..",Toast.LENGTH_LONG).show();
                         Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Request Timed out!" + "Refresh Now..", Snackbar.LENGTH_LONG);
                         sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
+                        TextView tv=sb.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+                        tv.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+
                         sb.show();
                         contactList.clear();
                         mAdapter.notifyDataSetChanged();
@@ -852,6 +858,9 @@ public class MainActivity extends AppCompatActivity {
                     else if(Objects.equals(s.trim(), "")) {
                         Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Unable to fetch data!", Snackbar.LENGTH_LONG);
                         sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
+                        TextView tv=sb.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+                        tv.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+
                         sb.show();
                         //Toast.makeText(MainActivity.this, "Unable to fetch data!", Toast.LENGTH_LONG).show();
                         contactList.clear();
@@ -862,8 +871,13 @@ public class MainActivity extends AppCompatActivity {
                         contactList.clear();
                         mAdapter.notifyDataSetChanged();
                         //Toast.makeText(MainActivity.this, "Sorry, No events on "+selectedGridDate+"!", Toast.LENGTH_LONG).show();
+
+                        //snackbar text color updated
                         Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Sorry, No events on "+selectedGridDate+"!", Snackbar.LENGTH_LONG);
                         sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
+                        TextView tv=sb.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+                        tv.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+
                         sb.show();
                         //Snackbar.make(findViewById(R.id.constraintlayoutroot), "Sorry, No events on "+selectedGridDate+"!", Snackbar.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
@@ -974,6 +988,9 @@ public class MainActivity extends AppCompatActivity {
 
             Snackbar sb = Snackbar.make(findViewById(R.id.constraintlayoutroot), "Press BACK again to exit!", Snackbar.LENGTH_LONG);
             sb.getView().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.snackbarbg));
+        TextView tv=sb.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+        tv.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.black));
+
 /*            sb.setAction("Exit?", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
