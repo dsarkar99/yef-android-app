@@ -21,12 +21,13 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent2"
+                android:background="@drawable/bgshade3"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:elevation="20dp"
                 android:id="@+id/rel1"
+                android:padding="10dp"
                 android:layout_marginLeft="10dp">
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -62,10 +63,11 @@
 
                 <ImageButton
                     android:id="@+id/user_profile_photo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/logobg"
                     android:elevation="5dp"
                     android:padding="2dp"
@@ -78,9 +80,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/user_profile_photo"
-                    android:background="@color/white"
+                    android:background="@drawable/bgshade3"
                     android:layout_gravity="center_horizontal"
                     android:paddingBottom="10dp"
+                    android:layout_margin="10dp"
                     android:layoutAnimation="@anim/layout_animation_up_to_down">
 
 

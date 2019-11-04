@@ -10,6 +10,8 @@
     android:layout_centerVertical="true"
     >
 
+
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -18,6 +20,16 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/redirect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:gravity="center_horizontal"
+            android:text=""
+            android:layout_marginBottom="5dp"
+            android:textSize="15dp"/>
 
         <ImageView
             android:id="@+id/logo"
@@ -89,13 +101,24 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
             android:text="@string/no_account_yet"
             android:textStyle="bold"
             android:textColor="@color/black"
-
             android:gravity="center"
             android:textSize="14dp"/>
+
+        <TextView
+            android:id="@+id/forgot"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="-5dp"
+            android:text="Forgot password?"
+            android:textStyle="bold"
+            android:textColor="@color/red"
+            android:gravity="center"
+            android:textSize="12dp"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
